@@ -113,6 +113,7 @@
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pt-20">
+
 <!-- TopNavBar -->
 <nav class="bg-surface/80 backdrop-blur-xl font-body-md text-body-md fixed top-0 w-full z-50 border-b border-primary/30 shadow-[0_0_15px_rgba(0,242,255,0.2)] transition-all duration-300 ease-in-out">
 <div class="flex justify-between items-center px-gutter py-xs max-w-container-max mx-auto">
@@ -124,11 +125,16 @@
 <li><a class="text-on-surface-variant hover:text-primary transition-colors hover:drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]" href="#">Promo</a></li>
 </ul>
 <div class="hidden md:flex gap-sm">
-<button class="text-on-surface-variant hover:text-primary transition-colors hover:drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]">Login</button>
-<button class="bg-primary text-on-primary px-sm py-xs rounded hover:bg-primary-container transition-colors glow-box">Register</button>
+<a href="{{ route('login') }}" class="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors hover:drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]">
+    Login
+</a>
+<a href="{{ route('register') }}" class="inline-flex items-center bg-primary text-on-primary px-sm py-xs rounded hover:bg-primary-container transition-colors glow-box">
+    Register
+</a>
 </div>
 </div>
 </nav>
+
 <!-- Hero Section -->
 <main class="flex-grow">
 <section class="px-gutter py-xl max-w-container-max mx-auto flex flex-col md:flex-row items-center gap-xl relative">
@@ -146,6 +152,7 @@
 </div>
 </div>
 </section>
+
 <!-- Availability Status -->
 <section class="px-gutter py-md max-w-container-max mx-auto">
 <div class="bg-surface-container rounded-xl p-md flex flex-col md:flex-row justify-between items-center border border-outline-variant gap-md">
@@ -169,6 +176,7 @@
 </div>
 </div>
 </section>
+
 <!-- Features Bento Grid -->
 <section class="px-gutter py-xl max-w-container-max mx-auto">
 <div class="grid grid-cols-1 md:grid-cols-4 gap-sm">
