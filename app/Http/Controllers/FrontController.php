@@ -19,4 +19,9 @@ class FrontController extends Controller
     {
         return view('katalog');
     }
+
+    public function promo()
+    {
+        return view('promo');
+    }
 }

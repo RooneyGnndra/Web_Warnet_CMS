@@ -20,5 +20,17 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', [FrontController::class, 'home'])->name('home');
 Route::get('/page', [FrontController::class, 'page'])->name('page');
+Route::get('/katalog', [FrontController::class, 'katalog'])->name('katalog');
+Route::get('/promo', [FrontController::class, 'promo'])->name('promo');
 
 require __DIR__.'/auth.php';
+
+// Rute Sementara untuk Dashboard User Biasa
+Route::get('/dashboard', function () {
+    return 'Halaman Dashboard Pelanggan (Sedang Dalam Pengembangan)';
+})->name('dashboard');
+
+// Rute Sementara untuk Dashboard Admin
+Route::get('/admin/dashboard', function () {
+    return 'Halaman Dashboard Admin NetCity (Sedang Dalam Pengembangan)';
+})->name('admin.dashboard');
