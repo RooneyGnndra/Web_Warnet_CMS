@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\KomputerManagementController;
 
 Route::get('/', function () {
     return view('CMS.Main.home');
@@ -32,8 +33,13 @@ Route::get('/dashboard', function () {
     return 'Halaman Dashboard Pelanggan (Sedang Dalam Pengembangan)';
 })->name('dashboard');
 
-// Ganti route lama kamu dengan ini di dalam group middleware 'auth'
 Route::middleware(['auth'])->group(function () {
-    // Sekarang mengarah ke Controller, bukan fungsi anonim (closure) lagi
+    // Route Dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // Rute Manajemen PC CRUD
+    Route::get('/managepc', [KomputerManagementController::class, 'index'])->name('admin.manage-pc');
+    Route::post('/managepc/store', [KomputerManagementController::class, 'store'])->name('admin.manage-pc.store');
+    Route::put('/managepc/update/{id}', [KomputerManagementController::class, 'update'])->name('admin.manage-pc.update');
+    Route::delete('/managepc/delete/{id}', [KomputerManagementController::class, 'destroy'])->name('admin.manage-pc.delete');
 });

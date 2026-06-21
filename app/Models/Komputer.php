@@ -6,16 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Komputer extends Model
 {
-    protected $table = 'komputer';
-    protected $primaryKey = 'id_komputer';
-
+    protected $table = 'KOMPUTER';
+    protected $primaryKey = 'ID_KOMPUTER'; 
+    public $incrementing = false;
+    protected $keyType = 'int';
+    public $timestamps = false;
+    
     protected $fillable = [
-        'id_komputer',
-        'status',
-        'tier',
-        'cpu',
-        'gpu',
-        'ram'
+        'ID_KOMPUTER',
+        'NAMA_KOMPUTER',
+        'STATUS',
+        'TIER',
+        'CPU',
+        'GPU',
+        'RAM'
     ];
 
     public function games()
