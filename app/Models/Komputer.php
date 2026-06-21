@@ -9,6 +9,15 @@ class Komputer extends Model
     protected $table = 'komputer';
     protected $primaryKey = 'id_komputer';
 
+    protected $fillable = [
+        'id_komputer',
+        'status',
+        'tier',
+        'cpu',
+        'gpu',
+        'ram'
+    ];
+
     public function games()
     {
         return $this->belongsToMany(

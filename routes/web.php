@@ -3,9 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/', function () {
-    return view('home');
+    return view('CMS.Main.home');
 });
 
 Route::get('/dashboard', function () {
@@ -18,19 +19,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+require __DIR__.'/auth.php';
+
 Route::get('/home', [FrontController::class, 'home'])->name('home');
 Route::get('/page', [FrontController::class, 'page'])->name('page');
 Route::get('/katalog', [FrontController::class, 'katalog'])->name('katalog');
 Route::get('/promo', [FrontController::class, 'promo'])->name('promo');
-
-require __DIR__.'/auth.php';
 
 // Rute Sementara untuk Dashboard User Biasa
 Route::get('/dashboard', function () {
     return 'Halaman Dashboard Pelanggan (Sedang Dalam Pengembangan)';
 })->name('dashboard');
 
-// Rute Sementara untuk Dashboard Admin
-Route::get('/admin/dashboard', function () {
-    return 'Halaman Dashboard Admin NetCity (Sedang Dalam Pengembangan)';
-})->name('admin.dashboard');
+// Ganti route lama kamu dengan ini di dalam group middleware 'auth'
+Route::middleware(['auth'])->group(function () {
+    // Sekarang mengarah ke Controller, bukan fungsi anonim (closure) lagi
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+});
