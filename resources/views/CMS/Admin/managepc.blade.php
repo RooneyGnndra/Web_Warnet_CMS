@@ -53,37 +53,55 @@
         </div>
     </div>
 
-    <section class="glass-card p-md rounded-xl mb-md flex flex-wrap gap-md items-center justify-between">
+    <form action="{{ route('admin.manage-pc') }}" method="GET" class="glass-card p-md rounded-xl mb-md flex flex-wrap gap-md items-center justify-between">
+    
         <div class="flex flex-1 min-w-[300px] relative">
             <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input class="w-full pl-[52px] pr-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Cari ID PC atau Nama..." type="text"/>
+            <input 
+                class="w-full pl-[52px] pr-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" 
+                placeholder="Cari ID PC atau Nama..." 
+                type="text"
+                name="search" 
+                value="{{ request('search') }}"
+            />
         </div>
+
         <div class="flex gap-sm">
             <div class="relative group">
-                <select class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer">
-                    <option>Semua Tier</option>
-                    <option>VIP</option>
-                    <option>Gold</option>
-                    <option>Silver</option>
-                    <option>Bronze</option>
+                <select 
+                    name="tier" 
+                    onchange="this.form.submit()" 
+                    class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer"
+                >
+                    <option value="">Semua Tier</option>
+                    <option value="VIP" {{ request('tier') == 'VIP' ? 'selected' : '' }}>VIP</option>
+                    <option value="GOLD" {{ request('tier') == 'GOLD' ? 'selected' : '' }}>Gold</option>
+                    <option value="SILVER" {{ request('tier') == 'SILVER' ? 'selected' : '' }}>Silver</option>
+                    <option value="BRONZE" {{ request('tier') == 'BRONZE' ? 'selected' : '' }}>Bronze</option>
                 </select>
                 <span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">filter_alt</span>
             </div>
+
             <div class="relative group">
-                <select class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer">
-                    <option>Semua Status</option>
-                    <option>Online</option>
-                    <option>Reserved</option>
-                    <option>Maintenance</option>
-                    <option>Offline</option>
+                <select 
+                    name="status" 
+                    onchange="this.form.submit()" 
+                    class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer"
+                >
+                    <option value="">Semua Status</option>
+                    <option value="Online" {{ request('status') == 'Online' ? 'selected' : '' }}>Online</option>
+                    <option value="Reserved" {{ request('status') == 'Reserved' ? 'selected' : '' }}>Reserved</option>
+                    <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
+                    <option value="Offline" {{ request('status') == 'Offline' ? 'selected' : '' }}>Offline</option>
                 </select>
                 <span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">expand_more</span>
             </div>
-            <button class="p-sm bg-surface-container-high rounded-lg text-on-surface-variant hover:text-primary transition-colors">
+
+            <a href="{{ route('admin.manage-pc') }}" class="p-sm bg-surface-container-high rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center justify-center" title="Reset Filter">
                 <span class="material-symbols-outlined">refresh</span>
-            </button>
+            </a>
         </div>
-    </section>
+    </form>
 
     <section class="glass-card rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
@@ -198,7 +216,7 @@
                 @csrf
                 <div class="space-y-sm font-body-sm">
                     <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: 01)</label>
+                        <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: NC-01)</label>
                         <input type="text" name="id_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
                     </div>
                     <div>
@@ -213,6 +231,20 @@
                             <option value="SILVER">SILVER</option>
                             <option value="BRONZE">BRONZE</option>
                         </select>
+                    </div>
+                    <div class="grid grid-cols-3 gap-sm mt-md">
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">CPU</label>
+                            <input type="text" name="cpu" placeholder="e.g. i5-13400F" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">GPU</label>
+                            <input type="text" name="gpu" placeholder="e.g. RTX 4060" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">RAM</label>
+                            <input type="text" name="ram" placeholder="e.g. 16GB DDR5" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-on-surface-variant text-label-md mb-xs">Status Awal</label>
@@ -252,6 +284,20 @@
                             <option value="BRONZE">BRONZE</option>
                         </select>
                     </div>
+                    <div class="grid grid-cols-3 gap-sm mt-md">
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">CPU</label>
+                            <input type="text" name="cpu" id="edit_cpu" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">GPU</label>
+                            <input type="text" name="gpu" id="edit_gpu" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-body-sm text-on-surface-variant mb-xs block">RAM</label>
+                            <input type="text" name="ram" id="edit_ram" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                        </div>
+                    </div>
                     <div>
                         <label class="block text-on-surface-variant text-label-md mb-xs">Status Operasional</label>
                         <select id="edit_status" name="status" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
@@ -288,8 +334,11 @@
             document.getElementById('edit_title').innerText = pc.id_komputer;
             document.getElementById('edit_nama').value = pc.nama_komputer;
             document.getElementById('edit_tier').value = pc.tier;
+            document.getElementById('edit_cpu').value = pc.cpu ?? '';
+            document.getElementById('edit_gpu').value = pc.gpu ?? '';
+            document.getElementById('edit_ram').value = pc.ram ?? '';
             document.getElementById('edit_status').value = pc.status;
-            
+
             document.getElementById('editForm').action = `/managepc/update/${pc.id_komputer}`;
             openModal('editModal');
         }
