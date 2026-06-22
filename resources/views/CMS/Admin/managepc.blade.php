@@ -99,21 +99,45 @@
                 </thead>
                 <tbody class="divide-y divide-outline-variant/30">
                     @forelse($computers as $pc)
+                        @php
+                            $pcArray = (array) $pc;
+                        @endphp
                         <tr class="hover:bg-primary/5 transition-colors group">
-                            <td class="px-gutter py-md font-mono text-primary">{{ $pc->id_komputer }}</td>
-                            <td class="px-gutter py-md font-semibold">{{ $pc->nama_komputer }}</td>
-                            <td class="px-gutter py-md">
-                                <span class="px-xs py-base bg-secondary-container/20 text-secondary border border-secondary/30 rounded-base text-[10px] font-bold uppercase">{{ $pc->tier }}</span>
+                            
+                            <td class="px-gutter py-md font-mono text-primary">
+                                {{ $pcArray['id_komputer'] ?? '-' }}
                             </td>
+                            
+                            <td class="px-gutter py-md">
+                                <div class="flex flex-col justify-center">
+                                    <span class="font-semibold text-on-surface text-body-md">
+                                        {{ $pcArray['nama_komputer'] ?? '-' }}
+                                    </span>
+                                    <span class="text-[10px] text-on-surface-variant/60 font-mono mt-xs flex items-center gap-x-xs whitespace-nowrap">
+                                        <strong class="text-primary/70 font-normal">CPU:</strong> {{ $pcArray['cpu'] ?? 'Belum diatur' }} 
+                                        <span class="text-on-surface-variant/30">|</span>
+                                        <strong class="text-primary/70 font-normal">GPU:</strong> {{ $pcArray['gpu'] ?? 'Belum diatur' }} 
+                                        <span class="text-on-surface-variant/30">|</span>
+                                        <strong class="text-primary/70 font-normal">RAM:</strong> {{ $pcArray['ram'] ?? 'Belum diatur' }}
+                                    </span>
+                                </div>
+                            </td>
+                            
+                            <td class="px-gutter py-md">
+                                <span class="px-xs py-base bg-secondary-container/20 text-secondary border border-secondary/30 rounded-base text-[10px] font-bold uppercase">
+                                    {{ $pcArray['tier'] ?? '-' }}
+                                </span>
+                            </td>
+                            
                             <td class="px-gutter py-md">
                                 <div class="flex items-center gap-xs">
-                                    @if($pc->status == 'Online')
+                                    @if(($pcArray['status'] ?? '') == 'Online')
                                         <span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#00f2ff]"></span>
                                         <span class="text-primary-container text-body-sm">Online</span>
-                                    @elseif($pc->status == 'Reserved')
+                                    @elseif(($pcArray['status'] ?? '') == 'Reserved')
                                         <span class="w-2 h-2 rounded-full bg-secondary"></span>
                                         <span class="text-secondary text-body-sm">Reserved</span>
-                                    @elseif($pc->status == 'Maintenance')
+                                    @elseif(($pcArray['status'] ?? '') == 'Maintenance')
                                         <span class="w-2 h-2 rounded-full bg-error"></span>
                                         <span class="text-error text-body-sm">Maintenance</span>
                                     @else
@@ -122,13 +146,14 @@
                                     @endif
                                 </div>
                             </td>
+                            
                             <td class="px-gutter py-md text-right">
                                 <div class="flex justify-end gap-sm">
-                                    <button onclick="openEditModal({{ json_encode($pc) }})" class="text-on-surface-variant hover:text-primary-container transition-colors">
+                                    <button onclick="openEditModal({{ json_encode($pcArray) }})" class="text-on-surface-variant hover:text-primary-container transition-colors">
                                         <span class="material-symbols-outlined">edit</span>
                                     </button>
                                     
-                                    <form action="{{ route('admin.manage-pc.delete', $pc->id_komputer ?? 0) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus PC ini?')">
+                                    <form action="{{ route('admin.manage-pc.delete', $pcArray['id_komputer'] ?? '') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus PC ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-on-surface-variant hover:text-error transition-colors">
@@ -140,7 +165,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-gutter py-md text-center text-on-surface-variant">Belum ada data unit PC di database.</td>
+                            <td colspan="5" class="px-gutter py-md text-center text-on-surface-variant/50">
+                                Tidak ada data PC tersedia.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -171,7 +198,7 @@
                 @csrf
                 <div class="space-y-sm font-body-sm">
                     <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: NC-PC-01)</label>
+                        <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: 01)</label>
                         <input type="text" name="id_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
                     </div>
                     <div>
@@ -257,7 +284,7 @@
         }
 
         function openEditModal(pc) {
-            // Sesuaikan properti objek ke huruf kecil
+            // Pastikan membaca key dengan huruf kecil semua
             document.getElementById('edit_title').innerText = pc.id_komputer;
             document.getElementById('edit_nama').value = pc.nama_komputer;
             document.getElementById('edit_tier').value = pc.tier;
