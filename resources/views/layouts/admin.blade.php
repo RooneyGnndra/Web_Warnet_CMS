@@ -77,7 +77,7 @@
                 <span class="material-symbols-outlined">computer</span>
                 <span>Manage PC</span>
             </a>
-            <a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200 font-body-sm" href="#">
+            <a class="flex items-center gap-sm px-md py-sm rounded-lg transition-all duration-200 font-body-sm {{ request()->routeIs('admin.game-library.index') ? 'bg-gradient-to-r from-primary/10 to-transparent text-primary border-l-4 border-primary font-semibold' : 'text-on-surface-variant hover:bg-surface-variant/50' }}" href="{{ route('admin.game-library.index') }}">
                 <span class="material-symbols-outlined">sports_esports</span>
                 <span>Game Library</span>
             </a>

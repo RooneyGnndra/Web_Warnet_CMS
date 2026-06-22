@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\KomputerManagementController;
+use App\Http\Controllers\GameLibraryController;
 
 Route::get('/', function () {
     return view('CMS.Main.home');
@@ -42,4 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/managepc/store', [KomputerManagementController::class, 'store'])->name('admin.manage-pc.store');
     Route::put('/managepc/update/{id}', [KomputerManagementController::class, 'update'])->name('admin.manage-pc.update');
     Route::delete('/managepc/delete/{id}', [KomputerManagementController::class, 'destroy'])->name('admin.manage-pc.delete');
+
+    // Rute Game Library
+    Route::get('/admin/game-library', [GameLibraryController::class, 'index'])->name('admin.game-library.index');
 });

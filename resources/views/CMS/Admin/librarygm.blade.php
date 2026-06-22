@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('admin-content')
+@section('content')
 <header class="h-xl flex items-center justify-between px-gutter border-b border-outline-variant/30 bg-surface/50 backdrop-blur-md sticky top-0 z-40">
     <div>
         <h2 class="font-headline-lg text-headline-lg text-on-surface">Game Library</h2>
