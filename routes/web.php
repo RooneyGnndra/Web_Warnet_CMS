@@ -46,4 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute Game Library
     Route::get('/admin/game-library', [GameLibraryController::class, 'index'])->name('admin.game-library.index');
+    Route::post('/admin/game-library/store', [GameLibraryController::class, 'store'])->name('admin.game-library.store');
+    Route::put('/admin/game-library/update/{id}', [GameLibraryController::class, 'update'])->name('admin.game-library.update');
+    Route::delete('/admin/game-library/delete/{id}', [GameLibraryController::class, 'destroy'])->name('admin.game-library.delete');
 });

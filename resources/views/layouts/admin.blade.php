@@ -87,18 +87,16 @@
             </a>
         </nav>
         <div class="mt-auto px-sm pt-md border-t border-outline-variant/30">
-            <button class="w-full mb-md py-sm px-md rounded-lg bg-primary-container text-on-primary font-semibold flex items-center justify-center gap-xs hover:shadow-[0_0_15px_rgba(0,242,255,0.4)] transition-all duration-300">
-                <span class="material-symbols-outlined">add</span>
-                <span>New Session</span>
-            </button>
-            <a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-primary transition-colors font-body-sm" href="#">
-                <span class="material-symbols-outlined">help</span>
-                <span>Support</span>
-            </a>
-            <a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-error transition-colors font-body-sm" href="#">
+            <a href="{{ route('logout') }}" 
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-error transition-colors font-body-sm">
                 <span class="material-symbols-outlined">logout</span>
                 <span>Logout</span>
             </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
         </div>
     </aside>
 

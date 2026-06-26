@@ -33,9 +33,33 @@ class FrontController extends Controller
         return view('CMS.Main.daftarpc', compact('computers'));
     }
 
-    public function katalog()
+    public function katalog(Request $request) // Tambahkan parameter Request $request
     {
-        return view('CMS.Main.katalog');
+        // 1. Ambil input search dan genre dari user
+        $search = $request->get('search');
+        $genre = $request->get('genre');
+
+        // 2. Mulai query ke tabel GAMES
+        $query = DB::table('GAMES');
+
+        // 3. Logika filter pencarian judul atau developer game
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('JUDUL_GAME', 'LIKE', '%' . $search . '%')
+                  ->orWhere('DEVELOPER', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        // 4. Logika filter berdasarkan tombol genre yang diklik
+        if (!empty($genre)) {
+            $query->where('GENRE', $genre);
+        }
+
+        // 5. Ambil semua data game terbaru dari Oracle
+        $games = $query->orderBy('ID', 'desc')->get();
+
+        // 6. Lempar data $games ke view CMS.Main.katalog
+        return view('CMS.Main.katalog', compact('games'));
     }
 
     public function promo()
