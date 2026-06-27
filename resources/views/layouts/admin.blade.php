@@ -85,8 +85,8 @@
                 <span class="material-symbols-outlined">sell</span>
                 <span>Manajemen Promo</span>
             </a>
-            <a class="flex items-center gap-sm px-md py-sm rounded sidebar-gradient-active text-primary border-l-4 border-primary group font-body-sm" href="{{ route('admin.users.index') }}">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+            <a class="flex items-center gap-sm px-md py-sm rounded-lg transition-all duration-200 font-body-sm {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-primary/10 to-transparent text-primary border-l-4 border-primary font-semibold' : 'text-on-surface-variant hover:bg-surface-variant/50' }}" href="{{ route('admin.users.index') }}">
+                <span class="material-symbols-outlined" style="{{ request()->routeIs('admin.users.*') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">group</span>
                 <span>Manajemen User</span>
             </a>
         </nav>

@@ -81,66 +81,72 @@
                 <tbody class="divide-y divide-outline-variant/20">
                     @forelse($users as $user)
                         <tr class="user-row hover:bg-primary/5 transition-colors group">
-                            <!-- ID Member NetCity -->
-                            <td class="px-md py-sm font-body-sm text-primary">{{ $user->id_member }}</td>
-                            <!-- Profil Gambar & Username -->
+                            <td class="px-md py-sm font-body-sm text-primary">NC-M-{{ sprintf('%03d', $user->id) }}</td>
+                            
                             <td class="px-md py-sm">
                                 <div class="flex items-center gap-xs">
                                     <div class="w-8 h-8 rounded-lg overflow-hidden border border-outline-variant">
-                                        <img class="w-full h-full object-cover" alt="Avatar" src="{{ !empty($user->avatar_url) ? asset('storage/' . $user->avatar_url) : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAV0blCqMufllbQ9YvhC3CMHrjJ3igJ6BlFlrqidRCR_NgFdg_UIOivbfRycp21b6Mh_tQ-M5BiPNV_oRvpqOc8wWWjPfmL2kV2NCMfLNp-E5C4smj6R4Au5mFTe5w1Yu6TxrdOLvnJGjBrFVzp_OpICnfi4XIetR82Hr-2qqOsiA_XXVRt9gPPHtIh2ji0VaDoa0KJDwZJWS8biAxSLw1YS1qaCWJNy7z4XfJhMPIAaJ920bQR4oGflbYGoZ8nrLi2PHbPc7l89_I' }}"/>
+                                        <img class="w-full h-full object-cover" alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV0blCqMufllbQ9YvhC3CMHrjJ3igJ6BlFlrqidRCR_NgFdg_UIOivbfRycp21b6Mh_tQ-M5BiPNV_oRvpqOc8wWWjPfmL2kV2NCMfLNp-E5C4smj6R4Au5mFTe5w1Yu6TxrdOLvnJGjBrFVzp_OpICnfi4XIetR82Hr-2qqOsiA_XXVRt9gPPHtIh2ji0VaDoa0KJDwZJWS8biAxSLw1YS1qaCWJNy7z4XfJhMPIAaJ920bQR4oGflbYGoZ8nrLi2PHbPc7l89_I"/>
                                     </div>
                                     <span class="user-name-text font-headline-md text-body-md text-on-surface">{{ $user->username }}</span>
                                 </div>
                             </td>
-                            <!-- Kondisi Jika Email Bersifat Opsional -->
+                            
                             <td class="user-email-text px-md py-sm font-body-sm text-on-surface-variant">
                                 {{ $user->email ?? 'Tidak Ada Email' }}
                             </td>
-                            <!-- Sisa Waktu Billing Paket -->
+                            
                             <td class="px-md py-sm font-body-sm">
                                 @php
                                     $timeColor = 'text-on-surface-variant';
-                                    if(isset($user->sisa_menit)) {
-                                        if($user->sisa_menit <= 0) $timeColor = 'text-error';
-                                        elseif($user->sisa_menit <= 60) $timeColor = 'text-secondary-fixed-dim';
+                                    if(isset($user->sisa_waktu)) {
+                                        if($user->sisa_waktu <= 0) $timeColor = 'text-error';
+                                        elseif($user->sisa_waktu <= 60) $timeColor = 'text-secondary-fixed-dim';
                                         else $timeColor = 'text-primary';
                                     }
                                 @endphp
                                 <div class="flex items-center gap-xs {{ $timeColor }}">
                                     <span class="material-symbols-outlined text-sm">schedule</span>
                                     <span>
-                                        @if(isset($user->sisa_menit))
-                                            {{ sprintf('%02d:%02d hrs', floor($user->sisa_menit / 60), $user->sisa_menit % 60) }}
+                                        @if(isset($user->sisa_waktu))
+                                            {{ sprintf('%02d:%02d hrs', floor($user->sisa_waktu / 60), $user->sisa_waktu % 60) }}
                                         @else
                                             00:00 hrs
                                         @endif
                                     </span>
                                 </div>
                             </td>
-                            <!-- Badge Tier Level Player -->
+                            
                             <td class="px-md py-sm">
-                                @switch(strtoupper($user->tier ?? 'SILVER'))
+                                @switch(strtoupper($user->tier_langganan ?? 'BRONZE'))
                                     @case('VIP')
                                         <span class="px-xs py-0.5 rounded-full bg-secondary-container/20 text-secondary border border-secondary/30 text-[10px] font-bold uppercase tracking-widest">VIP</span>
                                         @break
                                     @case('GOLD')
                                         <span class="px-xs py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30 text-[10px] font-bold uppercase tracking-widest">Gold</span>
                                         @break
-                                    @default
+                                    @case('SILVER')
                                         <span class="px-xs py-0.5 rounded-full bg-outline-variant/20 text-on-surface-variant border border-outline-variant/30 text-[10px] font-bold uppercase tracking-widest">Silver</span>
+                                    @default
+                                        <span class="px-xs py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-bold uppercase tracking-widest">Bronze</span>
                                 @endswitch
                             </td>
-                            <!-- Tanggal Pembuatan Akun -->
+                            
                             <td class="px-md py-sm font-body-sm text-on-surface-variant">
                                 {{ isset($user->created_at) ? date('d M Y', strtotime($user->created_at)) : '-' }}
                             </td>
-                            <!-- Tombol Aksi Kontrol Kasir/Admin -->
+                            
                             <td class="px-md py-sm text-right">
                                 <div class="flex justify-end gap-xs">
-                                    <button class="btn-edit-user p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all" data-id="{{ $user->id }}">
+                                    <button class="btn-edit-user p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all" 
+                                            data-id="{{ $user->id }}"
+                                            data-username="{{ $user->username }}"
+                                            data-email="{{ $user->email }}"
+                                            data-sisa="{{ $user->sisa_waktu }}"
+                                            data-tier="{{ $user->tier_langganan }}">
                                         <span class="material-symbols-outlined text-md">edit</span>
                                     </button>
-                                    <form action="#" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus member ini?')">
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus member ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-error hover:bg-error-container/10 transition-all">
@@ -186,33 +192,84 @@
     </div>
 </div>
 
+<div id="modalEditUser" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-background/80 backdrop-blur-sm close-edit-user-modal"></div>
+    <div class="glass-card neon-border relative w-full max-w-lg p-lg rounded-xl bg-surface-container-high z-10 space-y-md border border-outline-variant">
+        <div class="flex items-center justify-between border-b border-outline-variant/30 pb-xs">
+            <h3 class="font-headline-md text-headline-md text-on-surface">Edit Data Member</h3>
+            <button type="button" class="text-on-surface-variant hover:text-error close-edit-user-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="formEditUser" method="POST" class="space-y-sm">
+            @csrf
+            @method('PUT')
+            
+            <div class="flex flex-col gap-xs">
+                <label class="text-label-md text-on-surface-variant">Username</label>
+                <input type="text" name="username" id="edit_username" required class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+                <label class="text-label-md text-on-surface-variant">Email (Opsional)</label>
+                <input type="email" name="email" id="edit_email" class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+            </div>
+
+            <div class="grid grid-cols-2 gap-sm">
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Sisa Waktu (Menit)</label>
+                    <input type="number" name="sisa_waktu" id="edit_sisa_waktu" required min="0" class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Tier Member</label>
+                    <select name="tier_langganan" id="edit_tier" class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none">
+                        <option value="BRONZE">BRONZE</option>
+                        <option value="SILVER">SILVER</option>
+                        <option value="GOLD">GOLD</option>
+                        <option value="VIP">VIP</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-sm pt-sm border-t border-outline-variant/30 mt-md">
+                <button type="button" class="close-edit-user-modal bg-surface-variant text-on-surface px-md py-sm rounded-lg font-label-md transition-all">Batal</button>
+                <button type="submit" class="bg-primary text-on-primary px-md py-sm rounded-lg font-label-md shadow-[0_0_10px_rgba(0,242,255,0.3)] hover:brightness-110 transition-all">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- TRIGGER TOMBOL TAMBAH & EDIT MODAL ---
-        document.getElementById('btnTambahMember').addEventListener('click', function() {
-            console.log('Open Add Member Modal Triggered');
-            // Tambahkan pemanggilan modal pendaftaran member baru di sini nanti
+        const modalEditUser = document.getElementById('modalEditUser');
+        const formEditUser = document.getElementById('formEditUser');
+        const btnEdits = document.querySelectorAll('.btn-edit-user');
+
+        // Buka modal & Auto-fill Data Lama
+        btnEdits.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const username = this.getAttribute('data-username');
+                const email = this.getAttribute('data-email');
+                const sisa = this.getAttribute('data-sisa');
+                const tier = this.getAttribute('data-tier');
+
+                formEditUser.setAttribute('action', `/admin/users/update/${id}`);
+                
+                document.getElementById('edit_username').value = username;
+                document.getElementById('edit_email').value = email || '';
+                document.getElementById('edit_sisa_waktu').value = sisa || 0;
+                document.getElementById('edit_tier').value = tier || 'BRONZE';
+
+                modalEditUser.classList.remove('hidden');
+            });
         });
 
-        // --- SISTEM LIVE SEARCH SISI KLIEN ---
-        const searchInput = document.getElementById('userSearchInput');
-        if(searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('.user-row');
-                
-                rows.forEach(row => {
-                    const username = row.querySelector('.user-name-text').innerText.toLowerCase();
-                    const email = row.querySelector('.user-email-text').innerText.toLowerCase();
-                    
-                    if(username.includes(query) || email.includes(query)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        }
+        // Tutup Modal Edit
+        document.querySelectorAll('.close-edit-user-modal').forEach(btn => {
+            btn.addEventListener('click', () => modalEditUser.classList.add('hidden'));
+        });
     });
 </script>
 @endsection

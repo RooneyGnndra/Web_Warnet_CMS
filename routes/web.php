@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\KomputerManagementController;
 use App\Http\Controllers\GameLibraryController;
 use App\Http\Controllers\PromoManagementController;
+use App\Http\Controllers\AdminUserController;
 
 Route::get('/', function () {
     return view('CMS.Main.home');
@@ -56,4 +57,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/promo/store', [PromoManagementController::class, 'store'])->name('admin.promo.store');
     Route::put('/admin/promo/update/{id}', [PromoManagementController::class, 'update'])->name('admin.promo.update');
     Route::delete('/admin/promo/delete/{id}', [PromoManagementController::class, 'destroy'])->name('admin.promo.delete');
+
+    // Rute Manajemen User
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::put('/admin/users/update/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
