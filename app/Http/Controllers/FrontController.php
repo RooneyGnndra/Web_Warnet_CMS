@@ -62,8 +62,17 @@ class FrontController extends Controller
         return view('CMS.Main.katalog', compact('games'));
     }
 
+    // --- EDIT / PERBARUI FUNGSI PROMO DI CONTROLLER KAMU MENJADI SEPERTI INI ---
     public function promo()
     {
-        return view('CMS.Main.promo');
+        // 1. Tarik data dari tabel PROMO yang berstatus AKTIF saja
+        // 2. Urutkan dari yang paling baru dibuat (desc)
+        $promos = DB::table('PROMO')
+                    ->where('STATUS', 'AKTIF')
+                    ->orderBy('ID', 'desc')
+                    ->get();
+
+        // 3. Lempar variabel $promos ke file blade publik
+        return view('CMS.Main.promo', compact('promos'));
     }
 }
