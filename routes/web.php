@@ -8,6 +8,7 @@ use App\Http\Controllers\KomputerManagementController;
 use App\Http\Controllers\GameLibraryController;
 use App\Http\Controllers\PromoManagementController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\UserDashboardController;
 
 Route::get('/', function () {
     return view('CMS.Main.home');
@@ -30,12 +31,14 @@ Route::get('/home', [FrontController::class, 'home'])->name('home');
 Route::get('/page', [FrontController::class, 'page'])->name('page');
 Route::get('/katalog', [FrontController::class, 'katalog'])->name('katalog');
 Route::get('/promo', [FrontController::class, 'promo'])->name('promo');
+Route::post('/promo/claim/{id}', [FrontController::class, 'claimPromo'])->name('promo.claim');
 
-// Rute Sementara untuk Dashboard User Biasa
-Route::get('/dashboard', function () {
-    return 'Halaman Dashboard Pelanggan (Sedang Dalam Pengembangan)';
-})->name('dashboard');
+//Route User
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+});
 
+//Route Admin
 Route::middleware(['auth'])->group(function () {
     // Route Dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');

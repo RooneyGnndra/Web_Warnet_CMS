@@ -98,12 +98,40 @@
                                     </div>
                                 </div>
                                 
-                                <button type="button" 
-                                        data-voucher-id="{{ $promo->id }}"
-                                        class="btn-claim-voucher w-full py-2 bg-transparent border border-primary text-primary hover:bg-primary hover:text-black font-label-md text-label-md rounded transition-all duration-300 flex justify-center items-center gap-xs">
-                                    <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
-                                    <span class="btn-claim-text">Claim Voucher</span>
-                                </button>
+                                <form action="{{ route('promo.claim', $promo->id) }}" method="POST" class="w-full">
+                                    @csrf
+                                    @php
+                                        $isClaimed = false;
+                                        $isAdmin = false;
+                                        
+                                        if(Auth::check()) {
+                                            $user = Auth::user();
+                                            $isAdmin = ($user->role === 'admin');
+                                            
+                                            // Cek klaim hanya jika BUKAN admin
+                                            if(!$isAdmin) {
+                                                $isClaimed = DB::table('user_promo')
+                                                            ->where('user_id', $user->id)
+                                                                ->where('promo_id', $promo->id)
+                                                            ->exists();
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if($isClaimed)
+                                        <button type="button" disabled
+                                                class="w-full py-2 bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 font-label-md text-label-md rounded flex justify-center items-center gap-xs cursor-default">
+                                            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                            <span>Telah Diklaim</span>
+                                        </button>
+                                    @else
+                                        <button type="submit" 
+                                                class="w-full py-2 bg-transparent border border-primary text-primary hover:bg-primary hover:text-black font-label-md text-label-md rounded transition-all duration-300 flex justify-center items-center gap-xs">
+                                            <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                                            <span>{{ $isAdmin ? '[TEST] Claim Voucher' : 'Claim Voucher' }}</span>
+                                        </button>
+                                    @endif
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -173,63 +201,6 @@
         if(countdownElements.length > 0) {
             runPublicTimers();
             setInterval(runPublicTimers, 1000);
-        }
-
-        // --- 3. CEK STATUS KLAIM (SAAT REFRESH HALAMAN) ---
-        if (isLoggedIn && userRole !== 'admin') {
-            claimButtons.forEach(button => {
-                const vId = button.getAttribute('data-voucher-id');
-                if (localStorage.getItem(`claimed_promo_${vId}`) === 'true') {
-                    setAsClaimed(button);
-                }
-            });
-        }
-
-        // --- 4. TRIGGER KLIK TOMBOL KLAIM ---
-        claimButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // SELEKSI AWAL: Jika belum login, hentikan aksi dan lempar ke login
-                if (!isLoggedIn) {
-                    alert("Anda harus login terlebih dahulu untuk mengklaim voucher NetCity!");
-                    window.location.href = "{{ route('login') }}"; 
-                    return; // Mencegah kode di bawahnya tereksekusi oleh guest
-                }
-
-                const vId = this.getAttribute('data-voucher-id');
-
-                // KONDISI: USER BIASA (Sudah terbukti login lewat seleksi di atas)
-                if (userRole !== 'admin') {
-                    if (localStorage.getItem(`claimed_promo_${vId}`) === 'true') {
-                        alert("Anda sudah mengklaim voucher ini sebelumnya!");
-                        return;
-                    }
-                    
-                    // Catat klaim di localStorage HANYA setelah sukses melewati gerbang login
-                    localStorage.setItem(`claimed_promo_${vId}`, 'true');
-                    setAsClaimed(this);
-                    alert("Voucher berhasil diklaim! Kode disimpan untuk akun Anda.");
-                } 
-                // KONDISI: ADMIN
-                else {
-                    alert("[TESTING ADMIN] Voucher sukses diproses! (Admin bebas klaim berulang kali)");
-                    this.classList.add('bg-emerald-500', 'text-black');
-                    setTimeout(() => {
-                        this.classList.remove('bg-emerald-500', 'text-black');
-                    }, 400);
-                }
-            });
-        });
-
-        // --- 5. FUNGSI PEMBANTU (MENGUBAH GAYA TOMBOL) ---
-        function setAsClaimed(buttonElement) {
-            buttonElement.disabled = true;
-            buttonElement.className = "w-full py-2 bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 font-label-md text-label-md rounded flex justify-center items-center gap-xs cursor-default";
-            
-            const icon = buttonElement.querySelector('.material-symbols-outlined');
-            if (icon) icon.textContent = "check_circle";
-            
-            const text = buttonElement.querySelector('.btn-claim-text');
-            if (text) text.textContent = "Telah Diklaim";
         }
     });
 </script>

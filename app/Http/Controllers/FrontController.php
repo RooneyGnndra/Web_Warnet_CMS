@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class FrontController extends Controller
 {
@@ -74,5 +75,43 @@ class FrontController extends Controller
 
         // 3. Lempar variabel $promos ke file blade publik
         return view('CMS.Main.promo', compact('promos'));
+    }
+
+    public function claimPromo(Request $request, $id)
+    {
+        // 1. Cek apakah sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu!');
+        }
+
+        $user = Auth::user();
+        $userId = $user->id;
+
+        // 2. KONDISI BUKAN ADMIN: Cek data duplikat di database
+        if ($user->role !== 'admin') {
+            $alreadyClaimed = DB::table('user_promo')
+                                ->where('user_id', $userId)
+                                ->where('promo_id', $id)
+                                ->exists();
+
+            if ($alreadyClaimed) {
+                return redirect()->back()->with('error', 'Anda sudah pernah mengklaim voucher ini!');
+            }
+        }
+
+        // 3. Masukkan ke database (Admin akan langsung masuk ke sini tanpa terblokir)
+        DB::table('user_promo')->insert([
+            'user_id' => $userId,
+            'promo_id' => $id,
+            'status' => 'READY',
+            'claimed_at' => now()
+        ]);
+
+        // Berikan pesan sukses yang berbeda untuk admin saat testing
+        $message = $user->role === 'admin' 
+            ? '[TESTING ADMIN] Voucher berhasil masuk ke database (Bisa klaim lagi)!' 
+            : 'Voucher berhasil diklaim! Silakan cek Dashboard Member Anda.';
+
+        return redirect()->back()->with('success', $message);
     }
 }

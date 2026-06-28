@@ -161,7 +161,7 @@
                                     Dashboard Admin
                                 </a>
                             @else
-                                <a href="{{ route('dashboard') }}" class="flex items-center gap-xs px-sm py-xs text-body-sm text-on-background hover:bg-primary hover:text-on-primary transition-colors font-semibold">
+                                <a href="{{ route('user.dashboard') }}" class="flex items-center gap-xs px-sm py-xs text-body-sm text-on-background hover:bg-primary hover:text-on-primary transition-colors font-semibold">
                                     <span class="material-symbols-outlined text-body-sm">badge</span>
                                     Dashboard Pelanggan
                                 </a>
