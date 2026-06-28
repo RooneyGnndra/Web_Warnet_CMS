@@ -65,4 +65,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
     Route::put('/admin/users/update/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::post('/admin/users/{id}/add-session', [AdminUserController::class, 'storeSession'])->name('admin.users.addSession');
 });

@@ -110,12 +110,20 @@
                         </tr>
                     </thead>
                     <tbody class="text-on-background divide-y divide-outline-variant/20">
-                        @forelse($playSessions ?? [] as $session)
+                        @forelse($playSessions as $session)
                             <tr class="hover:bg-surface-variant/30 transition-colors">
-                                <td class="py-sm">{{ date('d M Y, H:i', strtotime($session->waktu_mulai)) }}</td>
-                                <td class="py-sm font-bold text-primary">PC-{{ sprintf('%02d', $session->id_komputer) }}</td>
-                                <td class="py-sm">{{ $session->durasi }} Menit</td>
-                                <td class="py-sm text-right text-secondary font-bold">Rp {{ number_format($session->total_biaya) }}</td>
+                                <td class="py-sm">
+                                    {{ date('d M Y, H:i', strtotime($session->waktu_mulai)) }}
+                                </td>
+                                <td class="py-sm font-bold text-primary">
+                                    {{ $session->nama_komputer }}
+                                </td>
+                                <td class="py-sm">
+                                    {{ $session->durasi }} Jam
+                                </td>
+                                <td class="py-sm text-right text-secondary font-bold">
+                                    Rp {{ number_format($session->total_biaya, 0, ',', '.') }}
+                                </td>
                             </tr>
                         @empty
                             <tr>

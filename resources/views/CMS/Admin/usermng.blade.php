@@ -138,6 +138,11 @@
                             
                             <td class="px-md py-sm text-right">
                                 <div class="flex justify-end gap-xs">
+                                    <button class="btn-add-session p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all"
+                                            data-id="{{ $user->id }}"
+                                            data-username="{{ $user->username }}">
+                                        <span class="material-symbols-outlined text-md">computer</span>
+                                    </button>
                                     <button class="btn-edit-user p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all" 
                                             data-id="{{ $user->id }}"
                                             data-username="{{ $user->username }}"
@@ -240,13 +245,73 @@
     </div>
 </div>
 
+<div id="modalAddSession" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-background/80 backdrop-blur-sm close-session-modal"></div>
+    <div class="glass-card neon-border relative w-full max-w-md p-lg rounded-xl bg-surface-container-high z-10 space-y-md border border-outline-variant">
+        <div class="flex items-center justify-between border-b border-outline-variant/30 pb-xs">
+            <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
+                <span class="material-symbols-outlined text-primary">monitor_heart</span>
+                Input Sesi: <span id="session_modal_username" class="text-primary font-bold"></span>
+            </h3>
+            <button type="button" class="text-on-surface-variant hover:text-error close-session-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="formAddSession" method="POST" class="space-y-sm">
+            @csrf
+            
+            <div class="flex flex-col gap-xs">
+                <label class="text-label-md text-on-surface-variant">Pilih PC / Komputer Lounge</label>
+                <select name="id_komputer" required class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none">
+                    @for($i = 1; $i <= 14; $i++)
+                        @php $pcId = 'NC-' . str_pad($i, 2, '0', STR_PAD_LEFT); @endphp
+                        <option value="{{ $pcId }}">Lounge PC - {{ $pcId }}</option>
+                    @endfor
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-sm">
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Durasi Bermain (Jam)</label>
+                    <input type="number" 
+                        name="durasi" 
+                        step="0.1" 
+                        min="0.5" 
+                        placeholder="Contoh: 1.5 atau 2" 
+                        required 
+                        class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Total Biaya Billing (Rp)</label>
+                    <input type="number" 
+                        name="total_biaya" 
+                        min="0" 
+                        placeholder="Contoh: 75000" 
+                        required 
+                        class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-sm pt-sm border-t border-outline-variant/30 mt-md">
+                <button type="button" class="close-session-modal bg-surface-variant text-on-surface px-md py-sm rounded-lg font-label-md transition-all">Batal</button>
+                <button type="submit" class="bg-primary text-on-primary px-md py-sm rounded-lg font-label-md shadow-[0_0_10px_rgba(0,242,255,0.3)] hover:brightness-110 transition-all">Aktifkan Billing</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modalEditUser = document.getElementById('modalEditUser');
         const formEditUser = document.getElementById('formEditUser');
         const btnEdits = document.querySelectorAll('.btn-edit-user');
+        const modalAddSession = document.getElementById('modalAddSession');
+        const formAddSession = document.getElementById('formAddSession');
+        const btnSessions = document.querySelectorAll('.btn-add-session');
 
-        // Buka modal & Auto-fill Data Lama
+        // Buka modal & Auto-fill Data Lama (User)
         btnEdits.forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
@@ -270,6 +335,26 @@
         document.querySelectorAll('.close-edit-user-modal').forEach(btn => {
             btn.addEventListener('click', () => modalEditUser.classList.add('hidden'));
         });
+
+        // Buka Modal Sesi PC Baru
+        btnSessions.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const username = this.getAttribute('data-username');
+
+                // Set action form dinamis mengarah ke rute simpan sesi yang kita buat di web.php
+                formAddSession.setAttribute('action', `/admin/users/${id}/add-session`);
+                document.getElementById('session_modal_username').innerText = username;
+
+                modalAddSession.classList.remove('hidden');
+            });
+        });
+
+        // Tutup Modal Sesi
+        document.querySelectorAll('.close-session-modal').forEach(btn => {
+            btn.addEventListener('click', () => modalAddSession.classList.add('hidden'));
+        });
+        
     });
 </script>
 @endsection
