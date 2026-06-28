@@ -7,10 +7,6 @@
         <h2 class="font-headline-lg text-headline-lg text-on-surface">Manajemen Member</h2>
         <p class="font-body-sm text-body-sm text-on-surface-variant">Monitor and manage registered gaming lounge members</p>
     </div>
-    <button id="btnTambahMember" class="bg-primary-container text-on-primary-container px-sm py-xs rounded-xl font-headline-md text-body-md flex items-center gap-xs shadow-[0_0_15px_rgba(0,242,255,0.2)] hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all active:scale-95">
-        <span class="material-symbols-outlined">add</span>
-        Tambah Member
-    </button>
 </header>
 
 <div class="p-gutter max-w-container-max mx-auto space-y-lg">
@@ -75,7 +71,7 @@
                         <th class="px-md py-sm font-label-md text-label-md uppercase tracking-wider">Sisa Waktu</th>
                         <th class="px-md py-sm font-label-md text-label-md uppercase tracking-wider">Tier</th>
                         <th class="px-md py-sm font-label-md text-label-md uppercase tracking-wider">Tanggal Bergabung</th>
-                        <th class="px-md py-sm font-label-md text-label-md uppercase tracking-wider text-right">Actions</th>
+                        <th class="px-md py-sm font-label-md text-label-md uppercase tracking-wider text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/20">
@@ -143,6 +139,13 @@
                                             data-username="{{ $user->username }}">
                                         <span class="material-symbols-outlined text-md">computer</span>
                                     </button>
+
+                                    <button class="btn-add-game p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-secondary hover:bg-secondary/10 transition-all"
+                                            data-id="{{ $user->id }}"
+                                            data-username="{{ $user->username }}">
+                                        <span class="material-symbols-outlined text-md">sports_esports</span>
+                                    </button>
+
                                     <button class="btn-edit-user p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all" 
                                             data-id="{{ $user->id }}"
                                             data-username="{{ $user->username }}"
@@ -302,6 +305,69 @@
     </div>
 </div>
 
+<div id="modalAddGame" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-background/80 backdrop-blur-sm close-game-modal"></div>
+    <div class="glass-card neon-border relative w-full max-w-md p-lg rounded-xl bg-surface-container-high z-10 space-y-md border border-outline-variant">
+        <div class="flex items-center justify-between border-b border-outline-variant/30 pb-xs">
+            <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
+                <span class="material-symbols-outlined text-secondary">sports_esports</span>
+                Set Game Terakhir: <span id="game_modal_username" class="text-secondary font-bold"></span>
+            </h3>
+            <button type="button" class="text-on-surface-variant hover:text-error close-game-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="formAddGame" method="POST" class="space-y-sm">
+            @csrf
+            
+            <div class="flex flex-col gap-xs">
+                <label class="text-label-md text-on-surface-variant">Pilih Game Utama</label>
+                <select name="game_id" required class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none">
+                    <option value="" disabled selected>-- Pilih Game dari Database --</option>
+                    @isset($games)
+                        @foreach($games as $game)
+                            @php 
+                                $gArray = (array) $game; 
+                                $gameId = $gArray['ID_GAME'] ?? $gArray['id_game'] ?? '';
+                                $gameName = $gArray['JUDUL_GAME'] ?? $gArray['judul_game'] ?? 'Unknown Game';
+                            @endphp
+                            
+                            <option value="{{ $gameId }}">{{ $gameName }}</option>
+                        @endforeach
+                    @else
+                        <option value="1">The Witcher 3: Wild Hunt</option>
+                        <option value="2">Terraria</option>
+                        <option value="3">Left 4 Dead 2</option>
+                        <option value="4">A Space for the Unbound</option>
+                    @endisset
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-sm">
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Total Waktu Main (Jam)</label>
+                    <input type="number" name="total_jam" step="0.1" min="0.5" placeholder="Contoh: 12.5" required class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none"/>
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="text-label-md text-on-surface-variant">Keterangan Waktu</label>
+                    <select name="keterangan_waktu" required class="bg-surface-container-low border border-outline-variant text-on-surface rounded-lg px-md py-sm font-body-sm focus:border-primary focus:outline-none">
+                        <option value="Baru Saja">Baru Saja</option>
+                        <option value="Kemarin">Kemarin</option>
+                        <option value="2 Hari Lalu">2 Hari Lalu</option>
+                        <option value="Minggu Ini">Minggu Ini</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-sm pt-sm border-t border-outline-variant/30 mt-md">
+                <button type="button" class="close-game-modal bg-surface-variant text-on-surface px-md py-sm rounded-lg font-label-md transition-all">Batal</button>
+                <button type="submit" class="bg-secondary text-black px-md py-sm rounded-lg font-label-md shadow-[0_0_10px_rgba(220,184,255,0.3)] hover:brightness-110 transition-all font-bold">Simpan ke History</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modalEditUser = document.getElementById('modalEditUser');
@@ -310,6 +376,9 @@
         const modalAddSession = document.getElementById('modalAddSession');
         const formAddSession = document.getElementById('formAddSession');
         const btnSessions = document.querySelectorAll('.btn-add-session');
+        const modalAddGame = document.getElementById('modalAddGame');
+        const formAddGame = document.getElementById('formAddGame');
+        const btnGames = document.querySelectorAll('.btn-add-game');
 
         // Buka modal & Auto-fill Data Lama (User)
         btnEdits.forEach(button => {
@@ -353,6 +422,25 @@
         // Tutup Modal Sesi
         document.querySelectorAll('.close-session-modal').forEach(btn => {
             btn.addEventListener('click', () => modalAddSession.classList.add('hidden'));
+        });
+
+        // Buka Modal Input Game Terakhir
+        btnGames.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const username = this.getAttribute('data-username');
+
+                // Set action form mengarah dinamis ke rute save-game-history
+                formAddGame.setAttribute('action', `/admin/users/${id}/add-game-history`);
+                document.getElementById('game_modal_username').innerText = username;
+
+                modalAddGame.classList.remove('hidden');
+            });
+        });
+
+        // Tutup Modal Game
+        document.querySelectorAll('.close-game-modal').forEach(btn => {
+            btn.addEventListener('click', () => modalAddGame.classList.add('hidden'));
         });
         
     });

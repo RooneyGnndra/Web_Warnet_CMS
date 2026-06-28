@@ -47,10 +47,13 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 pointer-events-none"></div>
                 
                 <div class="p-sm">
-                    <div class="flex justify-between items-start mb-sm">
-                        <h2 class="font-headline-md text-headline-md text-on-surface">{{ $pcArray['id_komputer'] }}</h2>
+                    <div class="flex justify-between items-start gap-xs mb-sm">
                         
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded font-label-md text-label-md border
+                        <h2 class="font-headline-md text-headline-md text-on-surface h-14 line-clamp-2" title="{{ $pcArray['nama_komputer'] ?? $pcArray['id_komputer'] }}">
+                            {{ $pcArray['nama_komputer'] ?? $pcArray['id_komputer'] }}
+                        </h2>
+                        
+                        <span class="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded font-label-md text-label-md border
                             {{ $tierPC == 'VIP' ? 'bg-secondary/10 text-secondary border-secondary/30' : '' }}
                             {{ $tierPC == 'GOLD' ? 'bg-primary/10 text-primary border-primary/30' : '' }}
                             {{ $tierPC == 'SILVER' ? 'bg-surface-variant text-on-surface border-outline-variant' : '' }}
