@@ -30,7 +30,21 @@ class UserDashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Tarik Log Game Terakhir Dimainkan dari Oracle (Maksimal 5 data terbaru)
+        $recentGames = DB::table('USER_GAME_HISTORY')
+            ->join('GAMES', 'USER_GAME_HISTORY.GAME_ID', '=', 'GAMES.ID') 
+            ->where('USER_GAME_HISTORY.USER_ID', $user->id)
+            ->orderBy('USER_GAME_HISTORY.ID', 'desc')
+            ->select(
+                'GAMES.JUDUL_GAME', 
+                'GAMES.GENRE', 
+                'USER_GAME_HISTORY.TOTAL_JAM',          // WAJIB KAPITAL UTUH
+                'USER_GAME_HISTORY.KETERANGAN_WAKTU'     // WAJIB KAPITAL UTUH
+            )
+            ->take(5)
+            ->get();
+
         // 3. Lempar kedua variabel ($claimedVouchers dan $playSessions) ke file Blade
-        return view('CMS.User.dashboard', compact('claimedVouchers', 'playSessions'));
+        return view('CMS.User.dashboard', compact('claimedVouchers', 'playSessions', 'recentGames'));
     }
 }

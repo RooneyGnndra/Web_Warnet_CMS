@@ -142,8 +142,8 @@
 
                                     <button class="btn-add-game p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-secondary hover:bg-secondary/10 transition-all"
                                             data-id="{{ $user->id }}"
-                                            data-username="{{ $user->username }}">
-                                        <span class="material-symbols-outlined text-md">sports_esports</span>
+                                            data-username="{{ $user->username }}"
+                                            data-url="{{ route('admin.users.addGameHistory', $user->id) }}"> <span class="material-symbols-outlined text-md">sports_esports</span>
                                     </button>
 
                                     <button class="btn-edit-user p-xs rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all" 
@@ -329,17 +329,15 @@
                         @foreach($games as $game)
                             @php 
                                 $gArray = (array) $game; 
-                                $gameId = $gArray['ID_GAME'] ?? $gArray['id_game'] ?? '';
+                                
+                                // PERBAIKAN UTAMA: Ganti ID_GAME menjadi ID sesuai kolom asli tabel GAMES kamu
+                                $gameId = $gArray['ID'] ?? $gArray['id'] ?? '';
+                                
                                 $gameName = $gArray['JUDUL_GAME'] ?? $gArray['judul_game'] ?? 'Unknown Game';
                             @endphp
                             
                             <option value="{{ $gameId }}">{{ $gameName }}</option>
                         @endforeach
-                    @else
-                        <option value="1">The Witcher 3: Wild Hunt</option>
-                        <option value="2">Terraria</option>
-                        <option value="3">Left 4 Dead 2</option>
-                        <option value="4">A Space for the Unbound</option>
                     @endisset
                 </select>
             </div>
@@ -427,13 +425,15 @@
         // Buka Modal Input Game Terakhir
         btnGames.forEach(button => {
             button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
                 const username = this.getAttribute('data-username');
+                
+                // AMBIL URL RUTE TERDAFTAR SECARA AKURAT DARI ATRIBUT TOMBOL
+                const actionUrl = this.getAttribute('data-url');
 
-                // Set action form mengarah dinamis ke rute save-game-history
-                formAddGame.setAttribute('action', `/admin/users/${id}/add-game-history`);
+                // Set action form menggunakan URL absolut asli bawaan Laravel
+                formAddGame.setAttribute('action', actionUrl);
+                
                 document.getElementById('game_modal_username').innerText = username;
-
                 modalAddGame.classList.remove('hidden');
             });
         });

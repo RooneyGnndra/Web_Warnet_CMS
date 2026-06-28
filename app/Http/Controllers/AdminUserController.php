@@ -93,28 +93,47 @@ class AdminUserController extends Controller
 
     public function storeGameHistory(Request $request, $id)
     {
-        // Validasi input menyesuaikan id game VARCHAR(20) yang kamu miliki
+        // 1. Validasi input
         $request->validate([
             'game_id'          => 'required|string|max:20',
             'total_jam'        => 'required|numeric|min:0.5',
             'keterangan_waktu' => 'required|string'
         ]);
 
-        // Proteksi Auto-increment ID manual khusus Oracle agar tidak bentrok pk
-        $nextHistoryId = DB::table('user_game_history')->max('id') + 1;
+        try {
+            // 2. Ambil ID tertinggi menggunakan nama tabel & kolom KAPITAL
+            $nextHistoryId = DB::table('USER_GAME_HISTORY')->max('ID') + 1;
+            
+            if (!$nextHistoryId) {
+                $nextHistoryId = 1;
+            }
 
-        // Masukkan data log ke tabel baru yang barusan lolos kamu migrate
-        DB::table('user_game_history')->insert([
-            'id'               => $nextHistoryId,
-            'user_id'          => $id,
-            'game_id'          => $request->game_id,
-            'total_jam'        => (float) $request->total_jam,
-            'keterangan_waktu' => $request->keterangan_waktu,
-            'created_at'       => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at'       => Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
+            // 3. Eksekusi Insert
+            DB::table('USER_GAME_HISTORY')->insert([
+                'ID'               => $nextHistoryId,
+                'USER_ID'          => $id,
+                'GAME_ID'          => $request->game_id,
+                'TOTAL_JAM'        => (float) $request->total_jam,
+                'KETERANGAN_WAKTU' => $request->keterangan_waktu,
+                'CREATED_AT'       => Carbon::now()->format('Y-m-d H:i:s'),
+                'UPDATED_AT'       => Carbon::now()->format('Y-m-d H:i:s'),
+            ]);
 
-        return redirect()->back()->with('success', 'Riwayat aktivitas game member berhasil diperbarui!');
+            return redirect()->back()->with('success', 'Riwayat aktivitas game member berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            // JIKA TERJADI ERROR, PAKSA TAMPILKAN DI LAYAR AGAR KITA TAHU PENYEBABNYA
+            dd([
+                'Pesan_Error' => $e->getMessage(),
+                'Data_Input' => [
+                    'ID' => $nextHistoryId ?? 'belum terisi',
+                    'USER_ID' => $id,
+                    'GAME_ID' => $request->game_id,
+                    'TOTAL_JAM' => $request->total_jam,
+                    'KETERANGAN_WAKTU' => $request->keterangan_waktu
+                ]
+            ]);
+        }
     }
 
     // FUNGSI UPDATE DATA USER KE ORACLE

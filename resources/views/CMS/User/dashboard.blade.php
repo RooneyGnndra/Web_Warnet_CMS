@@ -67,9 +67,9 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter items-start">
         
-        <section class="col-span-1 xl:col-span-6 bg-surface-container rounded-xl p-md shadow-md flex flex-col min-h-[350px]">
+        <section class="bg-surface-container rounded-xl p-md shadow-md flex flex-col min-h-[350px]">
             <h3 class="font-headline-md text-headline-md text-on-background mb-md flex items-center border-b border-outline-variant/20 pb-xs">
                 <span class="material-symbols-outlined mr-sm text-primary">sell</span>
                 Koleksi Voucher Saya
@@ -85,18 +85,18 @@
                         <span class="text-[11px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-xs py-1 rounded font-bold uppercase tracking-wider">Ready to Use</span>
                     </div>
                 @empty
-                    <div class="h-full flex flex-col items-center justify-center text-center text-on-surface-variant opacity-60 py-lg">
+                    <div class="h-full flex flex-col items-center justify-center text-center text-on-surface-variant opacity-60 py-lg flex-1">
                         <span class="material-symbols-outlined text-4xl mb-xs">confirmation_number</span>
                         <p class="text-body-sm">Belum ada voucher NetCity yang diklaim.</p>
                     </div>
-                @endif
+                @endforelse
             </div>
         </section>
 
-        <section class="col-span-1 xl:col-span-6 bg-surface-container rounded-xl p-md shadow-md flex flex-col min-h-[350px]">
+        <section class="bg-surface-container rounded-xl p-md shadow-md flex flex-col min-h-[350px]">
             <h3 class="font-headline-md text-headline-md text-on-background mb-md flex items-center border-b border-outline-variant/20 pb-xs">
                 <span class="material-symbols-outlined mr-sm text-secondary">history</span>
-                Log Pemakaian PC & Sesi Bermain
+                Log Pemakaian PC &amp; Sesi
             </h3>
 
             <div class="overflow-x-auto flex-1">
@@ -113,7 +113,7 @@
                         @forelse($playSessions as $session)
                             <tr class="hover:bg-surface-variant/30 transition-colors">
                                 <td class="py-sm">
-                                    {{ date('d M Y, H:i', strtotime($session->waktu_mulai)) }}
+                                    {{ date('d M, H:i', strtotime($session->waktu_mulai)) }}
                                 </td>
                                 <td class="py-sm font-bold text-primary">
                                     {{ $session->nama_komputer }}
@@ -128,7 +128,7 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="py-xl text-center text-on-surface-variant opacity-60">
-                                    <div class="flex flex-col items-center justify-center">
+                                    <div class="flex flex-col items-center justify-center py-lg">
                                         <span class="material-symbols-outlined text-4xl mb-xs">computer</span>
                                         <p>Belum ada riwayat login sesi bermain di lobi PC.</p>
                                     </div>
@@ -140,6 +140,45 @@
             </div>
         </section>
 
+        <section class="bg-surface-container rounded-xl p-md shadow-md flex flex-col min-h-[350px]">
+            <h3 class="font-headline-md text-headline-md text-on-background mb-md flex items-center border-b border-outline-variant/20 pb-xs">
+                <span class="material-symbols-outlined mr-sm text-primary">sports_esports</span>
+                Game Terakhir Dimainkan
+            </h3>
+
+            <div class="space-y-sm flex-1 overflow-y-auto max-h-[400px] pr-xs">
+                @forelse($recentGames ?? [] as $game)
+                    @php 
+                        // 1. Cek jika object, atau paksa ke array
+                        $gArray = (array) $game; 
+                        
+                        // 2. ANTISIPASI: Periksa key KAPITAL dan huruf kecil sekaligus!
+                        $judulGame = $gArray['JUDUL_GAME'] ?? $gArray['judul_game'] ?? 'Unknown Game';
+                        $genreGame = $gArray['GENRE'] ?? $gArray['genre'] ?? 'Esports';
+                        $totalJam  = $gArray['TOTAL_JAM'] ?? $gArray['total_jam'] ?? 0;
+                        $ketWaktu  = $gArray['KETERANGAN_WAKTU'] ?? $gArray['keterangan_waktu'] ?? 'Baru Saja';
+                    @endphp
+                    
+                    <div class="glass-panel p-sm rounded-lg border border-outline-variant/30 flex items-center gap-sm bg-gradient-to-r from-surface-container-low to-transparent transition-all hover:border-primary/40">
+                        <div class="w-11 h-11 rounded bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-xs uppercase flex-shrink-0">
+                            {{ substr($judulGame, 0, 2) }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-label-lg text-on-surface truncate font-semibold">{{ $judulGame }}</h4>
+                            <p class="text-xs text-on-surface-variant truncate mt-0.5">
+                                Main: {{ $totalJam }} Jam • <span class="text-secondary font-mono">{{ $ketWaktu }}</span>
+                            </p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="h-full flex flex-col items-center justify-center text-center text-on-surface-variant opacity-60 py-lg flex-1">
+                        <span class="material-symbols-outlined text-4xl mb-xs">videogame_asset_off</span>
+                        <p class="text-body-sm">Belum ada riwayat aktivitas bermain game.</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
+        
     </div>
 </main>
 @endsection
