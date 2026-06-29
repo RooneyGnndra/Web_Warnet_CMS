@@ -92,21 +92,23 @@
     <div class="glass-card rounded-xl overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-surface-container-high border-b border-outline-variant/30">
-                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">ID</th>
+                <tr class="bg-surface-container-high border-b border-outline-variant/30 whitespace-nowrap">
+                    <th class="pl-md pr-sm py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest w-24 min-w-max">ID</th>
                     <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Game Title & Developer</th>
-                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Genre</th>
-                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-center">Min. RAM</th>
+                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest w-36">Genre</th>
+                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-center w-28">Min. RAM</th>
                     <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Tier Availability</th>
-                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-right">Actions</th>
+                    <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-right w-28">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant/10">
                 @forelse($games as $game)
                     <tr class="hover:bg-primary/5 transition-colors group">
-                        <td class="px-md py-md font-body-sm text-primary">{{ $game->id }}</td>
+                        <td class="pl-md pr-sm py-md font-body-sm text-primary font-mono whitespace-nowrap w-24">
+                            {{ $game->id }}
+                        </td>
                         
-                        <td class="px-md py-md">
+                        <td class="px-md py-md min-w-[250px]">
                             <div class="flex items-center gap-md">
                                 <div class="w-20 h-12 rounded overflow-hidden flex-shrink-0 border border-outline-variant group-hover:border-primary/50 transition-colors bg-surface-container">
                                     @if(!empty($game->image))
@@ -123,7 +125,9 @@
                         </td>
                         
                         <td class="px-md py-md">
-                            <span class="bg-primary-container/10 text-primary-container px-xs py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-primary/20">{{ $game->genre }}</span>
+                            <span class="inline-flex items-center justify-center bg-primary-container/10 text-primary-container px-sm py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-primary/20 text-center max-w-[120px] leading-tight breakdown-words">
+                                {{ $game->genre }}
+                            </span>
                         </td>
                         
                         <td class="px-md py-md text-center font-body-sm">{{ $game->min_ram }}</td>
