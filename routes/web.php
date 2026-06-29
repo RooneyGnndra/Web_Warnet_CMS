@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/home', [FrontController::class, 'home'])->name('home');
+//Route Main Website
+Route::get('/', [FrontController::class, 'home'])->name('home');
 Route::get('/page', [FrontController::class, 'page'])->name('page');
 Route::get('/katalog', [FrontController::class, 'katalog'])->name('katalog');
 Route::get('/promo', [FrontController::class, 'promo'])->name('promo');

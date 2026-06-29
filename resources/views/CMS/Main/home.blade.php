@@ -82,5 +82,77 @@
             </div>
         </div>
     </section>
+
+    <section class="px-gutter py-xl max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-xl">
+        
+        <div class="flex flex-col gap-md">
+            <div class="flex items-center gap-xs">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                <h2 class="font-headline-lg text-headline-lg text-primary glow-text">PC Paling Sering Digunakan</h2>
+            </div>
+            
+            <div class="flex flex-col gap-sm">
+                @forelse($pcPopuler as $pc)
+                    <div class="bg-surface-container rounded-xl p-md border border-outline-variant hover:border-primary/50 transition-colors flex justify-between items-center gap-md">
+                        <div class="flex items-center gap-md">
+                            <div class="bg-surface p-sm rounded-lg border border-primary/20 text-primary self-start">
+                                <span class="material-symbols-outlined">computer</span>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-xs mb-1">
+                                    <h4 class="font-title-lg text-white font-bold">{{ $pc->nama_komputer }}</h4>
+                                    <span class="text-[10px] uppercase px-2 py-0.5 rounded-full font-bold bg-primary/20 text-primary border border-primary/30">
+                                        {{ $pc->tier }}
+                                    </span>
+                                </div>
+                                <p class="text-on-surface-variant font-body-sm leading-relaxed">
+                                    <span class="text-white/70">{{ $pc->cpu }}</span> • 
+                                    <span class="text-white/70">{{ $pc->gpu }}</span> • 
+                                    <span class="text-white/70">{{ $pc->ram }} RAM</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="bg-primary/10 text-primary border border-primary/20 px-sm py-xs rounded text-label-sm font-semibold block">
+                                {{ $pc->total_main }} Sesi
+                            </span>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-on-surface-variant font-body-md italic">Belum ada data riwayat bermain.</p>
+                @endforelse
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-md">
+            <div class="flex items-center gap-xs">
+                <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                <h2 class="font-headline-lg text-headline-lg text-secondary glow-text">Game Terpopuler</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+                @forelse($gamePopuler as $game)
+                    <div class="bg-surface-container rounded-xl p-md border border-outline-variant hover:border-secondary/50 transition-colors flex flex-col justify-between h-full min-h-[140px] relative overflow-hidden group">
+                        
+                        @if($game->image)
+                            <div class="absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none" style="background-image: url('{{ $game->image }}')"></div>
+                        @endif
+
+                        <div class="z-10">
+                            <span class="text-secondary font-label-sm uppercase tracking-wider block mb-xs font-semibold">{{ $game->genre ?? 'Multiplayer' }}</span>
+                            <h4 class="font-title-lg text-white leading-snug font-bold">{{ $game->judul_game }}</h4>
+                        </div>
+                        <div class="flex justify-between items-center mt-md pt-sm border-t border-outline-variant/30 z-10">
+                            <span class="text-on-surface-variant font-body-xs">Dimainkan</span>
+                            <span class="text-secondary font-label-md font-bold">{{ $game->total_dimainkan }} Sesi</span>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-on-surface-variant font-body-md italic">Belum ada data riwayat game.</p>
+                @endforelse
+            </div>
+        </div>
+
+    </section>
 </main>
 @endsection

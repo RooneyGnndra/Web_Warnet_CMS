@@ -11,7 +11,46 @@ class FrontController extends Controller
 {
     public function home()
     {
-        return view('CMS.Main.home');
+        // 1. Ambil 3 PC Populer berdasarkan jumlah sesi bermain terbanyak
+        $pcPopuler = DB::table('SESI_BERMAIN')
+            ->join('KOMPUTER', 'SESI_BERMAIN.ID_KOMPUTER', '=', 'KOMPUTER.ID_KOMPUTER')
+            ->select(
+                'KOMPUTER.ID_KOMPUTER', 
+                'KOMPUTER.NAMA_KOMPUTER', 
+                'KOMPUTER.TIER', 
+                'KOMPUTER.CPU', 
+                'KOMPUTER.GPU', 
+                'KOMPUTER.RAM',
+                DB::raw('COUNT(SESI_BERMAIN.ID_SESI) as TOTAL_MAIN') // Menggunakan ID_SESI
+            )
+            ->groupBy(
+                'KOMPUTER.ID_KOMPUTER', 
+                'KOMPUTER.NAMA_KOMPUTER', 
+                'KOMPUTER.TIER', 
+                'KOMPUTER.CPU', 
+                'KOMPUTER.GPU', 
+                'KOMPUTER.RAM'
+            )
+            ->orderBy('TOTAL_MAIN', 'DESC')
+            ->limit(3)
+            ->get();
+
+        // 2. Ambil 4 Game Populer berdasarkan riwayat di USER_GAME_HISTORY
+        $gamePopuler = DB::table('USER_GAME_HISTORY')
+            ->join('GAMES', 'USER_GAME_HISTORY.GAME_ID', '=', 'GAMES.ID') // SESUAIKAN: Menggunakan GAME_ID, bkn ID_GAME
+            ->select(
+                'GAMES.ID', 
+                'GAMES.JUDUL_GAME', 
+                'GAMES.GENRE', 
+                'GAMES.IMAGE',
+                DB::raw('COUNT(USER_GAME_HISTORY.ID) as TOTAL_DIMAINKAN') // SESUAIKAN: Menghitung kolom ID milik history
+            )
+            ->groupBy('GAMES.ID', 'GAMES.JUDUL_GAME', 'GAMES.GENRE', 'GAMES.IMAGE')
+            ->orderBy('TOTAL_DIMAINKAN', 'DESC')
+            ->limit(4)
+            ->get();
+
+        return view('CMS.Main.home', compact('pcPopuler', 'gamePopuler'));
     }
     public function page(Request $request)
     {
