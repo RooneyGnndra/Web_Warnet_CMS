@@ -32,7 +32,7 @@
                 {{-- Gambar Cover Game --}}
                 <div class="h-40 w-full relative bg-surface-container-high">
                     @if(!empty($game->image))
-                        <img alt="{{ $game->judul_game }} Cover" class="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all" src="{{ asset('storage/' . $game->image) }}"/>
+                        <img alt="{{ $game->judul_game }} Cover" class="w-full h-full object-cover opacity-80 transition-all" src="{{ asset('storage/' . $game->image) }}"/>
                     @else
                         <div class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant text-sm font-label-md bg-surface-container-highest">
                             <span class="material-symbols-outlined text-[32px] mb-xs text-outline">sports_esports</span>

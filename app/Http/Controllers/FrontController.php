@@ -43,14 +43,18 @@ class FrontController extends Controller
                 'GAMES.JUDUL_GAME', 
                 'GAMES.GENRE', 
                 'GAMES.IMAGE',
+                'GAMES.DEVELOPER',
                 DB::raw('COUNT(USER_GAME_HISTORY.ID) as TOTAL_DIMAINKAN') // SESUAIKAN: Menghitung kolom ID milik history
             )
-            ->groupBy('GAMES.ID', 'GAMES.JUDUL_GAME', 'GAMES.GENRE', 'GAMES.IMAGE')
+            ->groupBy('GAMES.ID', 'GAMES.JUDUL_GAME', 'GAMES.GENRE', 'GAMES.IMAGE', 'GAMES.DEVELOPER')
             ->orderBy('TOTAL_DIMAINKAN', 'DESC')
             ->limit(4)
             ->get();
 
-        return view('CMS.Main.home', compact('pcPopuler', 'gamePopuler'));
+        // 3. Ambil data semua promo aktif untuk ditampilkan di Home
+        $promos = DB::table('PROMO')->get();
+
+        return view('CMS.Main.home', compact('pcPopuler', 'gamePopuler', 'promos'));
     }
     public function page(Request $request)
     {
