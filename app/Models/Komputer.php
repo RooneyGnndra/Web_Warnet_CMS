@@ -9,8 +9,13 @@ class Komputer extends Model
     protected $table = 'KOMPUTER';
     protected $primaryKey = 'ID_KOMPUTER'; 
     public $incrementing = false;
-    protected $keyType = 'int';
-    public $timestamps = false;
+    
+    // KOREKSI: Ubah menjadi string jika ID PC kamu mengandung huruf/karakter (Bukan angka murni)
+    protected $keyType = 'string'; 
+    
+    public $timestamps = true;
+
+    const UPDATED_AT = null;
     
     protected $fillable = [
         'ID_KOMPUTER',
@@ -19,7 +24,12 @@ class Komputer extends Model
         'TIER',
         'CPU',
         'GPU',
-        'RAM'
+        'RAM',
+        'DETAIL_CPU',
+        'DETAIL_GPU',
+        'DETAIL_RAM',
+        'DESKRIPSI',
+        'GAMBAR_PC',
     ];
 
     public function games()

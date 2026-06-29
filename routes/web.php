@@ -44,11 +44,11 @@ Route::middleware(['auth'])->group(function () {
     // Route Dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
-    // Rute Manajemen PC CRUD
+    // Rute Manajemen PC
     Route::get('/managepc', [KomputerManagementController::class, 'index'])->name('admin.manage-pc');
     Route::post('/managepc/store', [KomputerManagementController::class, 'store'])->name('admin.manage-pc.store');
-    Route::put('/managepc/update/{id}', [KomputerManagementController::class, 'update'])->name('admin.manage-pc.update');
-    Route::delete('/managepc/delete/{id}', [KomputerManagementController::class, 'destroy'])->name('admin.manage-pc.delete');
+    Route::put('/managepc/update/{id_komputer}', [KomputerManagementController::class, 'update'])->name('admin.manage-pc.update');
+    Route::delete('/managepc/delete/{id_komputer}', [KomputerManagementController::class, 'destroy'])->name('admin.manage-pc.delete');
 
     // Rute Game Library
     Route::get('/admin/game-library', [GameLibraryController::class, 'index'])->name('admin.game-library.index');

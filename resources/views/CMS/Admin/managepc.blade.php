@@ -54,25 +54,14 @@
     </div>
 
     <form action="{{ route('admin.manage-pc') }}" method="GET" class="glass-card p-md rounded-xl mb-md flex flex-wrap gap-md items-center justify-between">
-    
         <div class="flex flex-1 min-w-[300px] relative">
             <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input 
-                class="w-full pl-[52px] pr-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" 
-                placeholder="Cari ID PC atau Nama..." 
-                type="text"
-                name="search" 
-                value="{{ request('search') }}"
-            />
+            <input class="w-full pl-[52px] pr-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Cari ID PC atau Nama..." type="text" name="search" value="{{ request('search') }}"/>
         </div>
 
         <div class="flex gap-sm">
             <div class="relative group">
-                <select 
-                    name="tier" 
-                    onchange="this.form.submit()" 
-                    class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer"
-                >
+                <select name="tier" onchange="this.form.submit()" class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer">
                     <option value="">Semua Tier</option>
                     <option value="VIP" {{ request('tier') == 'VIP' ? 'selected' : '' }}>VIP</option>
                     <option value="GOLD" {{ request('tier') == 'GOLD' ? 'selected' : '' }}>Gold</option>
@@ -83,11 +72,7 @@
             </div>
 
             <div class="relative group">
-                <select 
-                    name="status" 
-                    onchange="this.form.submit()" 
-                    class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer"
-                >
+                <select name="status" onchange="this.form.submit()" class="appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-body-sm rounded-lg pl-md pr-[40px] py-sm focus:border-primary outline-none cursor-pointer">
                     <option value="">Semua Status</option>
                     <option value="Online" {{ request('status') == 'Online' ? 'selected' : '' }}>Online</option>
                     <option value="Reserved" {{ request('status') == 'Reserved' ? 'selected' : '' }}>Reserved</option>
@@ -103,51 +88,52 @@
         </div>
     </form>
 
-    <section class="glass-card rounded-xl overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+    <section class="glass-card rounded-xl overflow-hidden w-full max-w-full">
+        <div class="w-full overflow-x-auto block">
+            <table class="w-full min-w-[800px] text-left border-collapse table-auto">
                 <thead>
-                    <tr class="bg-surface-container-high/50 text-on-surface-variant font-label-md uppercase tracking-wider">
-                        <th class="px-gutter py-md">PC ID</th>
-                        <th class="px-gutter py-md">Name</th>
-                        <th class="px-gutter py-md">Tier</th>
-                        <th class="px-gutter py-md">Status</th>
-                        <th class="px-gutter py-md text-right">Actions</th>
+                    <tr class="bg-surface-container-high/50 text-on-surface-variant font-label-md uppercase tracking-wider whitespace-nowrap">
+                        <th class="px-gutter py-md w-24">PC ID</th>
+                        <th class="px-gutter py-md">Name & Specifications</th>
+                        <th class="px-gutter py-md w-28">Tier</th>
+                        <th class="px-gutter py-md w-32">Status</th>
+                        <th class="px-gutter py-md text-right w-28">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/30">
                     @forelse($computers as $pc)
-                        @php
-                            $pcArray = (array) $pc;
-                        @endphp
+                        @php $pcArray = (array) $pc; @endphp
                         <tr class="hover:bg-primary/5 transition-colors group">
-                            
-                            <td class="px-gutter py-md font-mono text-primary">
+                            <td class="px-gutter py-md font-mono text-primary whitespace-nowrap">
                                 {{ $pcArray['id_komputer'] ?? '-' }}
                             </td>
-                            
                             <td class="px-gutter py-md">
-                                <div class="flex flex-col justify-center">
-                                    <span class="font-semibold text-on-surface text-body-md">
-                                        {{ $pcArray['nama_komputer'] ?? '-' }}
-                                    </span>
-                                    <span class="text-[10px] text-on-surface-variant/60 font-mono mt-xs flex items-center gap-x-xs whitespace-nowrap">
-                                        <strong class="text-primary/70 font-normal">CPU:</strong> {{ $pcArray['cpu'] ?? 'Belum diatur' }} 
-                                        <span class="text-on-surface-variant/30">|</span>
-                                        <strong class="text-primary/70 font-normal">GPU:</strong> {{ $pcArray['gpu'] ?? 'Belum diatur' }} 
-                                        <span class="text-on-surface-variant/30">|</span>
-                                        <strong class="text-primary/70 font-normal">RAM:</strong> {{ $pcArray['ram'] ?? 'Belum diatur' }}
-                                    </span>
+                                <div class="flex items-center gap-md">
+                                    @if(!empty($pcArray['gambar_pc']))
+                                        <img src="{{ asset('storage/' . $pcArray['gambar_pc']) }}" class="w-10 h-10 object-cover rounded border border-outline-variant shrink-0" alt="">
+                                    @else
+                                        <div class="w-10 h-10 bg-surface-container rounded border border-outline-variant flex items-center justify-center text-outline shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">image</span>
+                                        </div>
+                                    @endif
+                                    <div class="flex flex-col justify-center min-w-0">
+                                        <span class="font-semibold text-on-surface text-body-md truncate">{{ $pcArray['nama_komputer'] ?? '-' }}</span>
+                                        <span class="text-[10px] text-on-surface-variant/60 font-mono mt-xs flex items-center gap-x-xs whitespace-nowrap overflow-hidden">
+                                            <strong class="text-primary/70 font-normal">CPU:</strong> {{ $pcArray['cpu'] ?? 'Belum diatur' }} 
+                                            <span class="text-on-surface-variant/30">|</span>
+                                            <strong class="text-primary/70 font-normal">GPU:</strong> {{ $pcArray['gpu'] ?? 'Belum diatur' }} 
+                                            <span class="text-on-surface-variant/30">|</span>
+                                            <strong class="text-primary/70 font-normal">RAM:</strong> {{ $pcArray['ram'] ?? 'Belum diatur' }}
+                                        </span>
+                                    </div>
                                 </div>
                             </td>
-                            
-                            <td class="px-gutter py-md">
+                            <td class="px-gutter py-md whitespace-nowrap">
                                 <span class="px-xs py-base bg-secondary-container/20 text-secondary border border-secondary/30 rounded-base text-[10px] font-bold uppercase">
                                     {{ $pcArray['tier'] ?? '-' }}
                                 </span>
                             </td>
-                            
-                            <td class="px-gutter py-md">
+                            <td class="px-gutter py-md whitespace-nowrap">
                                 <div class="flex items-center gap-xs">
                                     @if(($pcArray['status'] ?? '') == 'Online')
                                         <span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#00f2ff]"></span>
@@ -164,13 +150,11 @@
                                     @endif
                                 </div>
                             </td>
-                            
-                            <td class="px-gutter py-md text-right">
+                            <td class="px-gutter py-md text-right whitespace-nowrap">
                                 <div class="flex justify-end gap-sm">
                                     <button onclick="openEditModal({{ json_encode($pcArray) }})" class="text-on-surface-variant hover:text-primary-container transition-colors">
                                         <span class="material-symbols-outlined">edit</span>
                                     </button>
-                                    
                                     <form action="{{ route('admin.manage-pc.delete', $pcArray['id_komputer'] ?? '') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus PC ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -183,80 +167,94 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-gutter py-md text-center text-on-surface-variant/50">
-                                Tidak ada data PC tersedia.
-                            </td>
+                            <td colspan="5" class="px-gutter py-md text-center text-on-surface-variant/50">Tidak ada data PC tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
         <div class="px-gutter py-md bg-surface-container-high/30 border-t border-outline-variant/30">
             {{ $computers->links() }}
         </div>
     </section>
 
-    <footer class="mt-lg py-md border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-xs opacity-80 hover:opacity-100 transition-all duration-300">
-        <div class="flex items-center gap-sm">
-            <span class="font-display-lg text-body-lg text-primary">NetCity</span>
-            <p class="font-body-sm text-on-surface-variant">© 2024 NetCity Gaming Lounge. Manual billing must be processed at the cashier counter.</p>
-        </div>
-        <div class="flex gap-md">
-            <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
-            <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
-            <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
-        </div>
-    </footer>
-
     <div id="createModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-sm animate-fade-in">
-        <div class="bg-[#181b25] border border-outline-variant rounded-xl w-full max-w-md p-md relative shadow-2xl">
+        <div class="bg-[#181b25] border border-outline-variant rounded-xl w-full max-w-2xl p-md relative shadow-2xl">
             <h3 class="font-headline-md text-primary mb-md">Tambah Unit PC Baru</h3>
-            <form action="{{ route('admin.manage-pc.store') }}" method="POST">
+            <form action="{{ route('admin.manage-pc.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="space-y-sm font-body-sm">
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: NC-01)</label>
-                        <input type="text" name="id_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Nama Komputer</label>
-                        <input type="text" name="nama_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Tier Kategori</label>
-                        <select name="tier" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                            <option value="VIP">VIP</option>
-                            <option value="GOLD">GOLD</option>
-                            <option value="SILVER">SILVER</option>
-                            <option value="BRONZE">BRONZE</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-3 gap-sm mt-md">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md font-body-sm text-left">
+                    <div class="space-y-sm">
                         <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">CPU</label>
-                            <input type="text" name="cpu" placeholder="e.g. i5-13400F" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                            <label class="block text-on-surface-variant text-label-md mb-xs">ID Komputer (Contoh: NC-01)</label>
+                            <input type="text" name="id_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
                         </div>
                         <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">GPU</label>
-                            <input type="text" name="gpu" placeholder="e.g. RTX 4060" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Nama Komputer</label>
+                            <input type="text" name="nama_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-sm">
+                            <div>
+                                <label class="block text-on-surface-variant text-label-md mb-xs">Tier Kategori</label>
+                                <select name="tier" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                                    <option value="VIP">VIP</option>
+                                    <option value="GOLD">GOLD</option>
+                                    <option value="SILVER">SILVER</option>
+                                    <option value="BRONZE">BRONZE</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-on-surface-variant text-label-md mb-xs">Status Awal</label>
+                                <select name="status" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Reserved">Reserved</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">RAM</label>
-                            <input type="text" name="ram" placeholder="e.g. 16GB DDR5" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Foto Setup PC</label>
+                            <input type="file" name="gambar_pc" class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Status Awal</label>
-                        <select name="status" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                            <option value="Offline">Offline</option>
-                            <option value="Online">Online</option>
-                            <option value="Reserved">Reserved</option>
-                            <option value="Maintenance">Maintenance</option>
-                        </select>
+
+                    <div class="space-y-sm">
+                        <div class="grid grid-cols-3 gap-xs">
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">CPU (Ringkas)</label>
+                                <input type="text" name="cpu" placeholder="i5-13400F" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">GPU (Ringkas)</label>
+                                <input type="text" name="gpu" placeholder="RTX 4060" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">RAM (Ringkas)</label>
+                                <input type="text" name="ram" placeholder="16GB DDR5" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                        </div>
+                        <div class="space-y-xs border-t border-outline-variant/30 pt-xs">
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail CPU (Core/Thread/Clock)</label>
+                                <input type="text" name="detail_cpu" placeholder="10 Cores, 16 Threads, up to 4.6 GHz" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail GPU (VRAM/Arsitektur)</label>
+                                <input type="text" name="detail_gpu" placeholder="8GB GDDR6 VRAM Ada Lovelace" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail RAM (Speed/Channel)</label>
+                                <input type="text" name="detail_ram" placeholder="5200MHz Dual Channel" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Deskripsi Unit PC</label>
+                            <textarea name="deskripsi" rows="2" placeholder="Tulis deskripsi atau kelebihan unit PC lounge ini..." class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs resize-none"></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="flex justify-end gap-sm mt-lg">
+                <div class="flex justify-end gap-sm mt-lg border-t border-outline-variant/20 pt-sm">
                     <button type="button" onclick="closeModal('createModal')" class="px-md py-xs bg-surface-container-high rounded-lg text-on-surface-variant hover:text-primary">Batal</button>
                     <button type="submit" class="px-md py-xs bg-primary-container text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(0,242,255,0.4)]">Simpan PC</button>
                 </div>
@@ -265,50 +263,79 @@
     </div>
 
     <div id="editModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-sm">
-        <div class="bg-[#181b25] border border-outline-variant rounded-xl w-full max-w-md p-md relative shadow-2xl">
+        <div class="bg-[#181b25] border border-outline-variant rounded-xl w-full max-w-2xl p-md relative shadow-2xl">
             <h3 class="font-headline-md text-primary mb-md">Edit Data Unit <span id="edit_title"></span></h3>
-            <form id="editForm" method="POST">
+            <form id="editForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="space-y-sm font-body-sm">
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Nama Komputer</label>
-                        <input type="text" id="edit_nama" name="nama_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Tier Kategori</label>
-                        <select id="edit_tier" name="tier" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                            <option value="VIP">VIP</option>
-                            <option value="GOLD">GOLD</option>
-                            <option value="SILVER">SILVER</option>
-                            <option value="BRONZE">BRONZE</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-3 gap-sm mt-md">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md font-body-sm text-left">
+                    <div class="space-y-sm">
                         <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">CPU</label>
-                            <input type="text" name="cpu" id="edit_cpu" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Nama Komputer</label>
+                            <input type="text" id="edit_nama" name="nama_komputer" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-sm">
+                            <div>
+                                <label class="block text-on-surface-variant text-label-md mb-xs">Tier Kategori</label>
+                                <select id="edit_tier" name="tier" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                                    <option value="VIP">VIP</option>
+                                    <option value="GOLD">GOLD</option>
+                                    <option value="SILVER">SILVER</option>
+                                    <option value="BRONZE">BRONZE</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-on-surface-variant text-label-md mb-xs">Status Operasional</label>
+                                <select id="edit_status" name="status" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Reserved">Reserved</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">GPU</label>
-                            <input type="text" name="gpu" id="edit_gpu" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
-                        </div>
-                        <div>
-                            <label class="text-body-sm text-on-surface-variant mb-xs block">RAM</label>
-                            <input type="text" name="ram" id="edit_ram" class="w-full bg-surface-container border border-outline rounded-base px-sm py-xs text-on-surface focus:outline-none focus:border-primary">
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Ganti Foto PC (Opsional)</label>
+                            <input type="file" name="gambar_pc" class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-on-surface-variant text-label-md mb-xs">Status Operasional</label>
-                        <select id="edit_status" name="status" required class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none">
-                            <option value="Offline">Offline</option>
-                            <option value="Online">Online</option>
-                            <option value="Reserved">Reserved</option>
-                            <option value="Maintenance">Maintenance</option>
-                        </select>
+
+                    <div class="space-y-sm">
+                        <div class="grid grid-cols-3 gap-xs">
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">CPU (Ringkas)</label>
+                                <input type="text" name="cpu" id="edit_cpu" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">GPU (Ringkas)</label>
+                                <input type="text" name="gpu" id="edit_gpu" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">RAM (Ringkas)</label>
+                                <input type="text" name="ram" id="edit_ram" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                        </div>
+                        <div class="space-y-xs border-t border-outline-variant/30 pt-xs">
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail CPU</label>
+                                <input type="text" name="detail_cpu" id="edit_detail_cpu" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail GPU</label>
+                                <input type="text" name="detail_gpu" id="edit_detail_gpu" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-on-surface-variant mb-xs block">Detail RAM</label>
+                                <input type="text" name="detail_ram" id="edit_detail_ram" class="w-full bg-[#0a0e17] border border-outline rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-on-surface-variant text-label-md mb-xs">Deskripsi Unit PC</label>
+                            <textarea name="deskripsi" id="edit_deskripsi" rows="2" class="w-full bg-[#0a0e17] border border-outline-variant rounded-lg p-xs text-on-surface focus:border-primary outline-none text-xs resize-none"></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="flex justify-end gap-sm mt-lg">
+                <div class="flex justify-end gap-sm mt-lg border-t border-outline-variant/20 pt-sm">
                     <button type="button" onclick="closeModal('editModal')" class="px-md py-xs bg-surface-container-high rounded-lg text-on-surface-variant hover:text-primary">Batal</button>
                     <button type="submit" class="px-md py-xs bg-primary-container text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(0,242,255,0.4)]">Simpan Perubahan</button>
                 </div>
@@ -330,7 +357,6 @@
         }
 
         function openEditModal(pc) {
-            // Pastikan membaca key dengan huruf kecil semua
             document.getElementById('edit_title').innerText = pc.id_komputer;
             document.getElementById('edit_nama').value = pc.nama_komputer;
             document.getElementById('edit_tier').value = pc.tier;
@@ -338,6 +364,12 @@
             document.getElementById('edit_gpu').value = pc.gpu ?? '';
             document.getElementById('edit_ram').value = pc.ram ?? '';
             document.getElementById('edit_status').value = pc.status;
+            
+            // JALANKAN ASSIGNMENT DATA BARU UNTUK EDIT MODAL:
+            document.getElementById('edit_detail_cpu').value = pc.detail_cpu ?? '';
+            document.getElementById('edit_detail_gpu').value = pc.detail_gpu ?? '';
+            document.getElementById('edit_detail_ram').value = pc.detail_ram ?? '';
+            document.getElementById('edit_deskripsi').value = pc.deskripsi ?? '';
 
             document.getElementById('editForm').action = `/managepc/update/${pc.id_komputer}`;
             openModal('editModal');
@@ -348,7 +380,7 @@
             row.addEventListener('mouseleave', () => { row.style.boxShadow = "none"; });
         });
 
-        const searchInput = document.querySelector('input[type="text"]');
+        const searchInput = document.querySelector('input[name="search"]');
         if(searchInput) {
             searchInput.addEventListener('focus', () => { searchInput.parentElement.classList.add('neon-glow-primary'); });
             searchInput.addEventListener('blur', () => { searchInput.parentElement.classList.remove('neon-glow-primary'); });
