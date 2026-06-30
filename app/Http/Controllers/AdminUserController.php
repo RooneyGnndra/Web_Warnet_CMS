@@ -54,6 +54,8 @@ class AdminUserController extends Controller
     }
 
     // FUNGSI SIMPAN LOG BERMAIN
+    // FUNGSI SIMPAN LOG BERMAIN (SUDAH DIPERBAIKI)
+    // FUNGSI SIMPAN LOG BERMAIN (HANYA SESI BERMAIN & POTONG/TAMBAH SISA WAKTU)
     public function storeSession(Request $request, $id)
     {
         // 1. Validasi input dari Modal Form Admin
@@ -63,32 +65,59 @@ class AdminUserController extends Controller
             'total_biaya' => 'required|numeric'
         ]);
 
-        // 2. Manipulasi Waktu Menggunakan Carbon
-        $waktuMulai = Carbon::now();
-        $durasiJam = (float) $request->durasi;
-        $waktuSelesai = Carbon::now()->addHours($durasiJam);
-        
-        // Hitung biaya per jam secara dinamis untuk dicatat ke database Oracle
-        $biayaPerJam = $request->total_biaya / $durasiJam;
+        try {
+            // 2. Manipulasi Waktu Menggunakan Carbon
+            $waktuMulai = Carbon::now();
+            $durasiJam = (float) $request->durasi;
+            $waktuSelesai = Carbon::now()->addHours($durasiJam);
+            
+            // Hitung biaya per jam
+            $biayaPerJam = $request->total_biaya / $durasiJam;
 
-        // 3. Insert Data ke Tabel SESI_BERMAIN Oracle
+            // 3. Ambil data user untuk update SISA_WAKTU secara otomatis
+            $user = DB::table('USERS')->where('ID', $id)->first();
+            if (!$user) {
+                return redirect()->back()->with('error', 'Member tidak ditemukan!');
+            }
 
-        // Ambil ID tertinggi saat ini, jika tabel kosong mulai dari 0, lalu tambah 1
-        $nextId = DB::table('SESI_BERMAIN')->max('ID_SESI') + 1;
+            // Hitung sisa waktu baru dalam hitungan MENIT
+            $menitTambahan = $durasiJam * 60;
+            $sisaWaktuBaru = (isset($user->SISA_WAKTU) ? (int) $user->SISA_WAKTU : 0) + $menitTambahan;
 
-        DB::table('SESI_BERMAIN')->insert([
-            'ID_SESI'       => $nextId,
-            'WAKTU_MULAI'   => $waktuMulai->format('Y-m-d H:i:s'),
-            'WAKTU_SELESAI' => $waktuSelesai->format('Y-m-d H:i:s'),
-            'DURASI'        => $durasiJam,
-            'BIAYA_PER_JAM' => $biayaPerJam,
-            'TOTAL_BIAYA'   => $request->total_biaya,
-            'ID_KOMPUTER'   => $request->id_komputer,
-            'ID_USER'       => $id, // Mengikat langsung ke ID User yang dipilih
-            'ID_TRANSAKSI'  => null
-        ]);
+            // 4. Mulai Database Transaction agar kedua proses di bawah ini aman dan sinkron
+            DB::transaction(function () use ($waktuMulai, $waktuSelesai, $durasiJam, $biayaPerJam, $request, $id, $sisaWaktuBaru) {
+                
+                // A. Ambil ID tertinggi untuk SESI_BERMAIN
+                $nextId = DB::table('SESI_BERMAIN')->max('ID_SESI') + 1;
+                if (!$nextId) $nextId = 1;
 
-        return redirect()->back()->with('success', 'Billing sesi bermain baru berhasil diaktifkan untuk member!');
+                // B. Insert ke SESI_BERMAIN (KOLOM ID_TRANSAKSI SUDAH DIHAPUS TOTAL)
+                DB::table('SESI_BERMAIN')->insert([
+                    'ID_SESI'       => $nextId,
+                    'WAKTU_MULAI'   => $waktuMulai->format('Y-m-d H:i:s'),
+                    'WAKTU_SELESAI' => $waktuSelesai->format('Y-m-d H:i:s'),
+                    'DURASI'        => $durasiJam,
+                    'BIAYA_PER_JAM' => $biayaPerJam,
+                    'TOTAL_BIAYA'   => $request->total_biaya,
+                    'ID_KOMPUTER'   => $request->id_komputer,
+                    'ID_USER'       => $id
+                ]);
+
+                // C. Update SISA_WAKTU di tabel USERS agar langsung ngefek ke tampilan dashboard
+                DB::table('USERS')->where('ID', $id)->update([
+                    'SISA_WAKTU' => $sisaWaktuBaru
+                ]);
+            });
+
+            return redirect()->back()->with('success', 'Billing sesi bermain baru berhasil diaktifkan dan sisa waktu member telah diperbarui!');
+
+        } catch (\Exception $e) {
+            // Jika ada kendala, paksa tampilkan detail errornya di layar browser
+            dd([
+                'Pesan_Error' => $e->getMessage(),
+                'Solusi' => 'Pastikan nama-nama kolom di atas (KAPITAL) sudah sama persis dengan struktur tabel SESI_BERMAIN di Oracle XE kamu.'
+            ]);
+        }
     }
 
     public function storeGameHistory(Request $request, $id)

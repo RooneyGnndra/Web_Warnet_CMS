@@ -119,10 +119,11 @@
                                         <span class="px-xs py-0.5 rounded-full bg-secondary-container/20 text-secondary border border-secondary/30 text-[10px] font-bold uppercase tracking-widest">VIP</span>
                                         @break
                                     @case('GOLD')
-                                        <span class="px-xs py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30 text-[10px] font-bold uppercase tracking-widest">Gold</span>
+                                        <span class="px-xs py-0.5 rounded-full bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/30 text-[10px] font-bold uppercase tracking-widest">Gold</span>
                                         @break
                                     @case('SILVER')
                                         <span class="px-xs py-0.5 rounded-full bg-outline-variant/20 text-on-surface-variant border border-outline-variant/30 text-[10px] font-bold uppercase tracking-widest">Silver</span>
+                                        @break
                                     @default
                                         <span class="px-xs py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-bold uppercase tracking-widest">Bronze</span>
                                 @endswitch

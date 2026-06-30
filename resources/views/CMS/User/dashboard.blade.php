@@ -104,7 +104,7 @@
                     <thead>
                         <tr class="border-b border-outline-variant text-on-surface-variant">
                             <th class="py-sm font-semibold">Waktu Sesi</th>
-                            <th class="py-sm font-semibold">Nomor PC</th>
+                            <th class="py-sm font-semibold">Nama PC</th>
                             <th class="py-sm font-semibold">Durasi</th>
                             <th class="py-sm font-semibold text-right">Total Biaya</th>
                         </tr>

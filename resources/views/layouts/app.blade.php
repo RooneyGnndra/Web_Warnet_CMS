@@ -182,7 +182,7 @@
                     <a href="{{ route('login') }}" class="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors hover:drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]">
                         Login
                     </a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center bg-primary text-on-primary px-sm py-xs rounded hover:bg-primary-container transition-colors glow-box">
+                    <a href="{{ route('register') }}#register" class="inline-flex items-center bg-primary text-on-primary px-sm py-xs rounded hover:bg-primary-container transition-colors glow-box">
                         Register
                     </a>
                 @endauth
@@ -199,7 +199,7 @@
             <ul class="flex gap-md">
                 <li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a></li>
                 <li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
-                <li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a></li>
+                <li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a></li>
             </ul>
         </div>
     </footer>

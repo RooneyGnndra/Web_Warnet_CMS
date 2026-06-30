@@ -35,12 +35,12 @@ Route::get('/promo', [FrontController::class, 'promo'])->name('promo');
 Route::post('/promo/claim/{id}', [FrontController::class, 'claimPromo'])->name('promo.claim');
 
 //Route User
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 });
 
 //Route Admin
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     // Route Dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
