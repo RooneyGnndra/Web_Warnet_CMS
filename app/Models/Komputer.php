@@ -10,7 +10,7 @@ class Komputer extends Model
     protected $primaryKey = 'ID_KOMPUTER'; 
     public $incrementing = false;
     
-    // KOREKSI: Ubah menjadi string jika ID PC kamu mengandung huruf/karakter (Bukan angka murni)
+    
     protected $keyType = 'string'; 
     
     public $timestamps = true;
